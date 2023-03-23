@@ -1,0 +1,42 @@
+[
+  {
+    "path": "/vehicle",
+    "method": "GET",
+    "rabbit": "rpc"
+  },
+  {
+    "path": "/vehicle",
+    "method": "POST",
+    "rabbit": "rpc"
+  },
+  {
+    "path": "/vehicle",
+    "method": "DELETE",
+    "rabbit": "rpc"
+  },
+  {
+    "path": "/vehicle",
+    "method": "PUT",
+    "rabbit": "rpc"
+  },
+  {
+    "path": "/vehicle/owner",
+    "method": "GET",
+    "rabbit": "rpc"
+  },
+  {
+    "path": "/vehicle/owner",
+    "method": "POST",
+    "rabbit": "rpc"
+  },
+  {
+    "path": "/vehicle/owner",
+    "method": "DELETE",
+    "rabbit": "rpc"
+  },
+  {
+    "path": "/vehicle/owner",
+    "method": "PUT",
+    "rabbit": "rpc"
+  }
+]

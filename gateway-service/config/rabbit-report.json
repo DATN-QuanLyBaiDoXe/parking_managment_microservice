@@ -1,0 +1,7 @@
+[
+  {
+    "path": "/report",
+    "method": "GET",
+    "rabbit": "rpc"
+  }
+]

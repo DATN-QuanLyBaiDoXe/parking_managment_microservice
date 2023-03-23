@@ -1,0 +1,27 @@
+[
+  {
+    "path": "/management/event",
+    "method": "POST",
+    "rabbit": "rpc"
+  },
+  {
+    "path": "/management",
+    "method": "POST",
+    "rabbit": "rpc"
+  },
+  {
+    "path": "/management/event",
+    "method": "DELETE",
+    "rabbit": "rpc"
+  },
+  {
+    "path": "/management/event",
+    "method": "PUT",
+    "rabbit": "rpc"
+  },
+  {
+    "path": "/management/report",
+    "method": "GET",
+    "rabbit": "rpc"
+  }
+]
