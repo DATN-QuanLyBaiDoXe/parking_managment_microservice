@@ -32,4 +32,6 @@ public interface EventService {
     List<ReportDTO> reportEventByObject(String filterTimeLevel);
 
     List<ReportDTO> reportEventByStatus(String filterTimeLevel);
+
+    void save(Event event);
 }

@@ -2,7 +2,7 @@ package com.tth.management.model;
 
 public enum EventType {
 
-    UNKNOWN(3, "Không xác định"),
+    UNKNOWN(0, "Không xác định"),
     IN(1, "Vào"),
     OUT(2, "Ra");
 

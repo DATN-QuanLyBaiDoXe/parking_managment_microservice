@@ -62,6 +62,9 @@ public class RpcServer {
                         else if("/management/event".equalsIgnoreCase(requestPath)){
                             response = eventController.createEvent(request.getRequestPath(), headerParam, bodyParam);
                         }
+                        else if("/management/event/recognition".equalsIgnoreCase(requestPath)){
+                            response = eventController.recognitionEvent(request.getRequestPath(), headerParam, bodyParam);
+                        }
                         break;
                     case "PUT":
                         if("/management/event".equalsIgnoreCase(requestPath)){

@@ -23,5 +23,10 @@
     "path": "/management/report",
     "method": "GET",
     "rabbit": "rpc"
+  },
+  {
+    "path": "/management/event/recognition",
+    "method": "POST",
+    "rabbit": "rpc"
   }
 ]

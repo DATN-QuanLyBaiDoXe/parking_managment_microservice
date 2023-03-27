@@ -31,33 +31,6 @@ public class EventServiceImpl implements EventService {
     @Autowired
     private EventCustomizeRepository eventCustomizeRepository;
 
-//    @Override
-//    public EventPagingDTO getAllEvent(Map<String, Object> bodyParam) {
-//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//        Integer page = bodyParam.get("page") == null ? 0 : (Integer) bodyParam.get("page");
-//        Integer size = bodyParam.get("size") == null ? 10 : (Integer) bodyParam.get("size");
-//        List<Integer> eventType = (List<Integer>) bodyParam.get("eventType");
-//        List<Integer> sourceType = (List<Integer>) bodyParam.get("sourceType");
-//        List<Integer> objectType = (List<Integer>) bodyParam.get("objectType");
-//        String start = (String) bodyParam.get("startDate");
-//        String end = (String) bodyParam.get("endDate");
-//        Calendar cal = Calendar.getInstance();
-//        cal.add(Calendar.MONTH, -1);
-//        Date startDate = cal.getTime();
-//        Date endDate = new Date();
-//        try {
-//            if(start != null) {
-//                startDate = format.parse(start);
-//            }
-//            if(end != null) {
-//                endDate = format.parse(end);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return eventCustomizeRepository.getAllEvent(page, size, eventType, sourceType, objectType, startDate, endDate);
-//    }
-
     @Override
     public EventPagingDTO getAllEvent(Map<String, Object> bodyParam) throws IOException {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -228,6 +201,25 @@ public class EventServiceImpl implements EventService {
         }
         reportDTOList.sort(Comparator.comparing(ReportDTO::getCode));
         return reportDTOList;
+    }
+
+    @Override
+    public void save(Event event) {
+        String id = UUID.randomUUID().toString();
+        event.setUuid(id);
+        event.setEventType(EventType.of(randomInt(1, 3)));
+        event.setObjectType(ObjectType.of(randomInt(0, 4)));
+        event.setParentId(id);
+        event.setSourceType(SourceType.AUTO);
+        event.setNewest(true);
+        event.setCreatedBy("AI");
+        event.setStatus(Status.of(1));
+        eventRepository.save(event);
+        eventEsRepository.save(event);
+    }
+
+    private static int randomInt(int min, int max) {
+        return min + (int)(Math.random() * ((max - min) + 1));
     }
 
     private EventDTO transformToEventDTO(Event event) {

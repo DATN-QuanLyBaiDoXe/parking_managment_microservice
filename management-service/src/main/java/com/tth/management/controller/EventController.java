@@ -1,17 +1,19 @@
 package com.tth.management.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tth.common.message.MessageContent;
 import com.tth.common.message.ResponseMessage;
+import com.tth.management.kafka.KafkaClient;
 import com.tth.management.model.Event;
 import com.tth.management.model.dto.AuthorizationResponseDTO;
 import com.tth.management.model.dto.EventPagingDTO;
 import com.tth.management.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +22,9 @@ public class EventController extends BaseController {
 
     @Autowired
     private EventService eventService;
+
+    @Autowired
+    private KafkaClient kafkaClient;
 
     public ResponseMessage getAllEvent(String requestUrl, Map<String, String> headerParam, Map<String, Object> bodyParam) throws IOException {
         ResponseMessage response = null;
@@ -131,4 +136,31 @@ public class EventController extends BaseController {
         return response;
     }
 
+    public ResponseMessage recognitionEvent(String requestPath, Map<String, String> headerParam, Map<String, Object> bodyParam) {
+        ResponseMessage responseMessage = null;
+        Event event = transformFromBodyParam(bodyParam);
+        String msg = null;
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            msg = mapper.writeValueAsString(event);
+        } catch (Exception ex) {
+            LOGGER.error("Error to create json >>> {}", ex.toString());
+        }
+        if(kafkaClient.callKafkaServerWorker("event-request-topic", msg)) {
+            responseMessage = new ResponseMessage(HttpStatus.OK.value(), HttpStatus.OK.toString(),
+                    new MessageContent(HttpStatus.OK.value(), HttpStatus.OK.toString(), null));
+        } else {
+            responseMessage = new ResponseMessage(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.toString(),
+                    new MessageContent(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.toString(), null));
+        }
+        return responseMessage;
+    }
+
+    private Event transformFromBodyParam(Map<String, Object> bodyParam) {
+        Event event = new Event();
+        event.setPlace((String) bodyParam.get("place"));
+        event.setImage((String) bodyParam.get("image"));
+        event.setCreatedDate(new Date());
+        return  event;
+    }
 }

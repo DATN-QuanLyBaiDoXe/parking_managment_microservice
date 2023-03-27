@@ -2,7 +2,6 @@ package com.tth.report.controller;
 
 import com.tth.common.message.MessageContent;
 import com.tth.common.message.ResponseMessage;
-import com.tth.common.utils.StringUtil;
 import com.tth.report.dto.AuthorizationResponseDTO;
 import com.tth.report.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
