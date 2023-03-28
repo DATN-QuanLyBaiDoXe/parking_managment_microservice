@@ -12,6 +12,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
@@ -44,9 +45,14 @@ public class KafkaWorkerService {
     private Event transformEvent(String json) {
         JSONObject jsonObject = new JSONObject(json);
         Event event = new Event();
-        event.setPlace(jsonObject.getString("place"));
+        event.setPlace(jsonObject.getString("plate"));
         event.setImage(jsonObject.getString("image"));
-        event.setCreatedDate(new Date());
+        try{
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            event.setCreatedDate(format.parse(jsonObject.getString("created_date")));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return event;
     }
 
