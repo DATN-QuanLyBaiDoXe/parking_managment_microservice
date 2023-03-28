@@ -20,7 +20,6 @@ public class KafkaClient {
     public boolean callKafkaServerWorker(String topicRequest, String msg) {
         LOGGER.info("Call Worker Kafka Server Topic: {}, msg: {}", topicRequest, msg);
         try {
-            LOGGER.info("Call Worker Kafka Server Topic: {}, msg: {}", topicRequest, msg);
             ProducerRecord<String, String> record = new ProducerRecord<>(topicRequest, msg);
             ListenableFuture<SendResult<String, String>> send = kafkaTemplate.send(record);
             return true;

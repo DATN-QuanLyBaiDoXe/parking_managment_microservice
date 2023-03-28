@@ -8,6 +8,7 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.config.KafkaListenerContainerFactory;
 import org.springframework.kafka.config.TopicBuilder;
@@ -19,36 +20,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
+@DependsOn("kafkaProperties")
 public class KafkaConfig {
-
-//    @Bean
-//    public Map<String, Object> producerConfigs() {
-//        Map<String, Object> props = new HashMap<>();
-//        // list of host:port pairs used for establishing the initial connections to the Kakfa cluster
-//        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, KafkaProperties.BOOTSTRAP_SERVERS);
-//        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-//        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-//        return props;
-//    }
-//
-//    @Bean
-//    public Map<String, Object> consumerConfigs() {
-//        Map<String, Object> props = new HashMap<>();
-//        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, KafkaProperties.BOOTSTRAP_SERVERS);
-//        props.put(ConsumerConfig.GROUP_ID_CONFIG, KafkaProperties.CONSUMER_GROUP);
-//        props.put(ConsumerConfig.REQUEST_TIMEOUT_MS_CONFIG, 30000);
-//        props.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, 15000);
-//        props.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, 15000);
-//        props.put(ConsumerConfig.FETCH_MAX_WAIT_MS_CONFIG, 15000);
-//        props.put(ConsumerConfig.HEARTBEAT_INTERVAL_MS_CONFIG, 14000);
-//        return props;
-//    }
 
     @Bean
     public Map<String, Object> producerConfigs() {
         Map<String, Object> props = new HashMap<>();
         // list of host:port pairs used for establishing the initial connections to the Kakfa cluster
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, KafkaProperties.BOOTSTRAP_SERVERS);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         return props;
@@ -57,8 +36,8 @@ public class KafkaConfig {
     @Bean
     public Map<String, Object> consumerConfigs() {
         Map<String, Object> props = new HashMap<>();
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, "group-event");
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, KafkaProperties.BOOTSTRAP_SERVERS);
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, KafkaProperties.CONSUMER_GROUP);
         props.put(ConsumerConfig.REQUEST_TIMEOUT_MS_CONFIG, 30000);
         props.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, 15000);
         props.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, 15000);
@@ -100,26 +79,10 @@ public class KafkaConfig {
         return factory;
     }
 
-//    @Bean
-//    public NewTopic violationTopic() {
-//        return TopicBuilder.name(KafkaProperties.EVENT_TOPIC_REQUEST)
-//                .partitions(KafkaProperties.PARTITION)
-//                .replicas(1)
-//                .build();
-//    }
-//
-//    @Bean
-//    public KafkaAdmin kafkaAdmin()
-//    {
-//        Map<String, Object> configs = new HashMap<>();
-//        configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, KafkaProperties.BOOTSTRAP_SERVERS);
-//        return new KafkaAdmin(configs);
-//    }
-
     @Bean
     public NewTopic violationTopic() {
-        return TopicBuilder.name("event-request-topic")
-                .partitions(10)
+        return TopicBuilder.name(KafkaProperties.EVENT_TOPIC_REQUEST)
+                .partitions(KafkaProperties.PARTITION)
                 .replicas(1)
                 .build();
     }
@@ -128,7 +91,7 @@ public class KafkaConfig {
     public KafkaAdmin kafkaAdmin()
     {
         Map<String, Object> configs = new HashMap<>();
-        configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, KafkaProperties.BOOTSTRAP_SERVERS);
         return new KafkaAdmin(configs);
     }
 }

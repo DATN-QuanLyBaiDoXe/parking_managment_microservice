@@ -22,7 +22,7 @@ public class KafkaWorkerService {
         LOGGER.info("WorkerServer constructor ...........");
     }
 
-    @KafkaListener(topics = "${event.topic.request}", groupId = "${kafka.group.id}")
+    @KafkaListener(topics = "${event.topic.request}")
     @Async("threadPool")
     public void workerReceive(String json) {
         try {

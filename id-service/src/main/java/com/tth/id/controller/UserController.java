@@ -47,7 +47,7 @@ public class UserController extends BaseController {
                 search = params.get("search");
                 pageable = PageRequest.of(page, size, Sort.by(sort));
             } else {
-                pageable = PageRequest.of(0, 20, Sort.by(sort));
+                pageable = PageRequest.of(0, 20, Sort.by("username"));
             }
             Page<UserResponse> userResponsePage = userService.getAll(pageable, search);
             response = new ResponseMessage(HttpStatus.OK.value(), "Lấy danh sách người dùng",

@@ -161,6 +161,6 @@ public class EventController extends BaseController {
         event.setPlace((String) bodyParam.get("place"));
         event.setImage((String) bodyParam.get("image"));
         event.setCreatedDate(new Date());
-        return  event;
+        return event;
     }
 }
