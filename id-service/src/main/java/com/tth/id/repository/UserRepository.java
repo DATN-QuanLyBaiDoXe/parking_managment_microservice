@@ -5,6 +5,8 @@ import io.swagger.models.auth.In;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -21,7 +23,9 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     Page<User> findAllByStatus(Pageable pageable, Integer status);
 
-    Page<User> findByUsernameContainingIgnoreCaseOrFullNameContainingIgnoreCaseOrEmailContainingIgnoreCaseAndStatus(String username, String fullName, String email, Pageable pageable, Integer status);
+    @Query("SELECT u FROM User u WHERE (u.username like %:username% OR u.fullName like %:fullName% OR u.email like %:email%) AND u.status = :status")
+    Page<User> findByKeyword(@Param("username") String username, @Param("fullName") String fullName,
+                             @Param("email") String email, @Param("status") Integer status, Pageable pageable);
 
     List<User> findByUuidInAndStatus(List<String> uuids, Integer status);
 

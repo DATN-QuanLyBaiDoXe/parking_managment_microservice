@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
         if(StringUtil.isNullOrEmpty(search)){
             userList = userRepository.findAllByStatus(pageable, 1);
         } else {
-            userList = userRepository.findByUsernameContainingIgnoreCaseOrFullNameContainingIgnoreCaseOrEmailContainingIgnoreCaseAndStatus(search, search, search, pageable, 1);
+            userList = userRepository.findByKeyword(search, search, search, 1, pageable);
         }
         return transform(userList);
     }
