@@ -28,7 +28,7 @@ public class VehicleServiceImpl implements VehicleService {
         if (StringUtil.isNullOrEmpty(search)) {
             vehiclePage = vehicleRepository.findAllByStatus(pageable, 1);
         } else {
-            vehiclePage = vehicleRepository.findByPlaceContainingIgnoreCaseOrColorContainingIgnoreCaseOrBrandContainingIgnoreCase(pageable, search, search, search);
+            vehiclePage = vehicleRepository.findByKeyword(search, search, search, 1, pageable);
         }
         return transformToVehicleDTO(vehiclePage);
     }
@@ -57,9 +57,14 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     public VehicleDTO update(Vehicle vehicle, VehicleDTO vehicleDTO, String uuid, Owner owner) {
-        vehicle = transformToVehicle(vehicleDTO);
+        vehicle.setUuid(vehicleDTO.getUuid());
+        vehicle.setVehicleType(vehicleDTO.getVehicleType());
+        vehicle.setBrand(vehicleDTO.getBrand());
+        vehicle.setColor(vehicleDTO.getColor());
+        vehicle.setPlace(vehicleDTO.getPlace());
         vehicle.setModifiedBy(uuid);
         vehicle.setModifiedDate(new Date());
+        vehicle.setOwner(owner);
         vehicleRepository.save(vehicle);
         return vehicleDTO;
     }
@@ -93,6 +98,7 @@ public class VehicleServiceImpl implements VehicleService {
 
     private Vehicle transformToVehicle(VehicleDTO vehicleDTO) {
         Vehicle vehicle = new Vehicle();
+        vehicle.setUuid(vehicleDTO.getUuid());
         vehicle.setVehicleType(vehicleDTO.getVehicleType());
         vehicle.setBrand(vehicleDTO.getBrand());
         vehicle.setColor(vehicleDTO.getColor());
@@ -111,6 +117,7 @@ public class VehicleServiceImpl implements VehicleService {
                 vehicleDTO.setColor(vehicle.getColor());
                 vehicleDTO.setPlace(vehicle.getPlace());
                 vehicleDTO.setOwnerName(vehicle.getOwner().getFullName());
+                vehicleDTO.setOwnerId(vehicle.getOwner().getUuid());
                 return vehicleDTO;
             });
         }

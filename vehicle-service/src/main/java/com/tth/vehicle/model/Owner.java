@@ -1,9 +1,7 @@
 package com.tth.vehicle.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
@@ -14,7 +12,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "owner")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Proxy(lazy = false)

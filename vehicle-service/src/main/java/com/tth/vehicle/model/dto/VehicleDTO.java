@@ -21,5 +21,7 @@ public class VehicleDTO {
 
     private String ownerName;
 
+    private String ownerId;
+
     private Integer status;
 }

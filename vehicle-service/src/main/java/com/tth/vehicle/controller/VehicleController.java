@@ -57,7 +57,7 @@ public class VehicleController extends BaseController {
             Page<VehicleDTO> vehicleDTOPage = vehicleService.getAll(pageable, search);
             if(vehicleDTOPage == null){
                 response = new ResponseMessage(HttpStatus.OK.value(), "Lấy danh sách phương tiện",
-                        new MessageContent(HttpStatus.OK.value(), "Lấy danh sách phương tiện", null));
+                        new MessageContent(HttpStatus.OK.value(), "Lấy danh sách phương tiện", null, 0L));
             } else {
                 response = new ResponseMessage(HttpStatus.OK.value(), "Lấy danh sách phương tiện",
                         new MessageContent(HttpStatus.OK.value(), "Lấy danh sách phương tiện", vehicleDTOPage.getContent(), vehicleDTOPage.getTotalElements()));
@@ -132,6 +132,9 @@ public class VehicleController extends BaseController {
                             response = new ResponseMessage(HttpStatus.CONFLICT.value(), invalidData,
                                     new MessageContent(HttpStatus.CONFLICT.value(), invalidData, null));
                         } else {
+                            vehicleDTO.setUuid(requestUrl);
+                            vehicleDTO.setOwnerId(existOwner.getUuid());
+                            vehicleDTO.setOwnerName(existOwner.getFullName());
                             response = new ResponseMessage(HttpStatus.OK.value(), "Cập nhật phương tiện thành công",
                                     new MessageContent(HttpStatus.OK.value(), "Cập nhật phương tiện thành công", vehicleService.update(vehicle, vehicleDTO, dto.getUuid(), existOwner)));
                         }

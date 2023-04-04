@@ -16,7 +16,9 @@ public interface VehicleRepository extends JpaRepository<Vehicle, String> {
     
     Page<Vehicle> findAllByStatus(Pageable pageable, Integer status);
 
-    Page<Vehicle> findByPlaceContainingIgnoreCaseOrColorContainingIgnoreCaseOrBrandContainingIgnoreCase(Pageable pageable, String place, String color, String brand);
+    @Query("SELECT v FROM Vehicle v WHERE (v.place like %:plate% OR v.color like %:color% OR v.brand like %:brand%) AND v.status = :status")
+    Page<Vehicle> findByKeyword(@Param("plate") String plate, @Param("color") String color,
+                             @Param("brand") String brand, @Param("status") Integer status, Pageable pageable);
 
     Vehicle findByPlaceAndStatus(String place, Integer status);
 

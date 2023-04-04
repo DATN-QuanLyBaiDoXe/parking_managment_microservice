@@ -1,8 +1,6 @@
 package com.tth.vehicle.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
@@ -11,7 +9,8 @@ import java.util.Date;
 
 @Entity
 @Table(name = "vehicle")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Proxy(lazy = false)
