@@ -49,11 +49,11 @@ public class OwnerController extends BaseController {
             }
             Page<OwnerResponse> userResponsePage = ownerService.getAll(pageable, search);
             if(userResponsePage == null){
-                response = new ResponseMessage(HttpStatus.OK.value(), "Lấy danh sách người dùng",
-                        new MessageContent(HttpStatus.OK.value(), "Lấy danh sách người dùng", null));
+                response = new ResponseMessage(HttpStatus.OK.value(), "Lấy danh sách chủ sở hữu",
+                        new MessageContent(HttpStatus.OK.value(), "Lấy danh sách chủ sở hữu", null));
             } else {
-                response = new ResponseMessage(HttpStatus.OK.value(), "Lấy danh sách người dùng",
-                        new MessageContent(HttpStatus.OK.value(), "Lấy danh sách người dùng", userResponsePage.getContent(), userResponsePage.getTotalElements()));
+                response = new ResponseMessage(HttpStatus.OK.value(), "Lấy danh sách chủ sở hữu",
+                        new MessageContent(HttpStatus.OK.value(), "Lấy danh sách chủ sở hữu", userResponsePage.getContent(), userResponsePage.getTotalElements()));
             }
         }
         return response;
