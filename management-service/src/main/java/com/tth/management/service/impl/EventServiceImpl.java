@@ -207,8 +207,8 @@ public class EventServiceImpl implements EventService {
     public void save(Event event) {
         String id = UUID.randomUUID().toString();
         event.setUuid(id);
-        event.setEventType(EventType.of(randomInt(1, 3)));
-        event.setObjectType(ObjectType.of(randomInt(0, 4)));
+        event.setEventType(EventType.of(randomInt(1, 2)));
+        event.setObjectType(ObjectType.of(randomInt(1, 4)));
         event.setParentId(id);
         event.setSourceType(SourceType.AUTO);
         event.setNewest(true);
@@ -239,5 +239,10 @@ public class EventServiceImpl implements EventService {
         eventDTO.setModifiedDate(event.getModifiedDate());
         eventDTO.setStatus(event.getStatus().getCode());
         return eventDTO;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(randomInt(1, 2));
+        System.out.println(randomInt(1, 4));
     }
 }
