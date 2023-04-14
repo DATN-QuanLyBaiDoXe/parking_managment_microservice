@@ -77,6 +77,7 @@ public class EventServiceImpl implements EventService {
         event.setCreatedBy(uuid);
         event.setCreatedDate(new Date());
         event.setStatus(Status.of(3));
+        event.setDescription((String) bodyParam.get("description"));
         eventEsRepository.save(event);
         eventRepository.save(event);
         return transformToEventDTO(event);
@@ -238,7 +239,8 @@ public class EventServiceImpl implements EventService {
         eventDTO.setModifiedBy(event.getModifiedBy());
         eventDTO.setModifiedDate(event.getModifiedDate());
         eventDTO.setStatus(event.getStatus().getCode());
+        eventDTO.setDescription(event.getDescription());
         return eventDTO;
     }
-    
+
 }

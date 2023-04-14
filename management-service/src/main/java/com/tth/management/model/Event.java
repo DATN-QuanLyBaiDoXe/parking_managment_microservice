@@ -70,4 +70,7 @@ public class Event implements Serializable {
 
     private Status status;
 
+    @Column(name = "description")
+    private String description;
+
 }

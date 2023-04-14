@@ -38,4 +38,6 @@ public class EventDTO {
     private String modifiedBy;
 
     private Integer status;
+
+    private String description;
 }
