@@ -240,9 +240,5 @@ public class EventServiceImpl implements EventService {
         eventDTO.setStatus(event.getStatus().getCode());
         return eventDTO;
     }
-
-    public static void main(String[] args) {
-        System.out.println(randomInt(1, 2));
-        System.out.println(randomInt(1, 4));
-    }
+    
 }
