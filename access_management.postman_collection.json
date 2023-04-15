@@ -1,0 +1,920 @@
+{
+	"info": {
+		"_postman_id": "833af599-ee51-487b-9590-f0f197c639cd",
+		"name": "access_management",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17469796"
+	},
+	"item": [
+		{
+			"name": "id-service",
+			"item": [
+				{
+					"name": "Get all users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8181/v1.0/user?page=0&size=15&sort=fullName&search=",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8181",
+							"path": [
+								"v1.0",
+								"user"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "15"
+								},
+								{
+									"key": "sort",
+									"value": "fullName"
+								},
+								{
+									"key": "search",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var res = pm.response.json();\r",
+									"var bodyToken = res.data.accessToken;\r",
+									"pm.environment.set(\"token\", bodyToken)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"123456\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8181/v1.0/user/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8181",
+							"path": [
+								"v1.0",
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmZDcxMzM0ZC1kZTlhLTQ1NWEtODVmZC01OGIxOWQwZGFjMzkiLCJpYXQiOjE2NzM5Mzk5MTAsImV4cCI6MTY3NDU0NDcxMH0.xmY66owfvhBCcUZsW8NscEIOwah8eH2K5jdMhMq37ZsNYy4UK2k5L_AWKC1lvyJGkoiqilSHoT1JLIUI02sWgw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"hangtt\",\r\n    \"password\": \"hang1234\",\r\n    \"matchingPassword\": \"hang1234\",\r\n    \"fullName\": \"Trần Thu Hằng\",\r\n    \"phoneNumber\": \"0979163702\",\r\n    \"email\": \"hangtt@elcom.com.vn\",\r\n    \"gender\": 1,\r\n    \"birthday\": \"05/07/2001\",\r\n    \"address\": \"HN\",\r\n    \"avatar\": null,\r\n    \"role\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8181/v1.0/user",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8181",
+							"path": [
+								"v1.0",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmZDcxMzM0ZC1kZTlhLTQ1NWEtODVmZC01OGIxOWQwZGFjMzkiLCJpYXQiOjE2NzM5Mzk5MTAsImV4cCI6MTY3NDU0NDcxMH0.xmY66owfvhBCcUZsW8NscEIOwah8eH2K5jdMhMq37ZsNYy4UK2k5L_AWKC1lvyJGkoiqilSHoT1JLIUI02sWgw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"Hangwf update\",\r\n    \"phoneNumber\": \"0979163111\",\r\n    \"email\": \"hangtt123@elcom.com.vn\",\r\n    \"gender\": 0,\r\n    \"birthday\": \"05/09/2001\",\r\n    \"address\": \"TB\",\r\n    \"avatar\": null,\r\n    \"role\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8181/v1.0/user/1df857df-c602-42b6-8dea-9433c1f15bde",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8181",
+							"path": [
+								"v1.0",
+								"user",
+								"1df857df-c602-42b6-8dea-9433c1f15bde"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change password",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmZDcxMzM0ZC1kZTlhLTQ1NWEtODVmZC01OGIxOWQwZGFjMzkiLCJpYXQiOjE2NzUwNDkzOTAsImV4cCI6MTY3NTY1NDE5MH0.nwokyJCbRH-mUeX5qUfrUO4dZcrgTzcSNxgGAGYMXOnXpMbBS6WGAJFh_nGydpsJiIJn3GX7VXpsvsIOXa9Oxg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"currentPassword\": \"12345678\",\r\n    \"newPassword\": \"123456\",\r\n    \"matchingPassword\": \"123456\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8181/v1.0/user/password",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8181",
+							"path": [
+								"v1.0",
+								"user",
+								"password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete multi user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmZDcxMzM0ZC1kZTlhLTQ1NWEtODVmZC01OGIxOWQwZGFjMzkiLCJpYXQiOjE2NzUwNDkzOTAsImV4cCI6MTY3NTY1NDE5MH0.nwokyJCbRH-mUeX5qUfrUO4dZcrgTzcSNxgGAGYMXOnXpMbBS6WGAJFh_nGydpsJiIJn3GX7VXpsvsIOXa9Oxg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"uuids\": [\r\n        \"78dd2c90-21c8-4666-bc16-51d6596c0cc3\", \"b795f9bd-49bd-40df-947c-5bbd9ae88772\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8181/v1.0/user",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8181",
+							"path": [
+								"v1.0",
+								"user"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "vehicle-service",
+			"item": [
+				{
+					"name": "Get all owner",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmZDcxMzM0ZC1kZTlhLTQ1NWEtODVmZC01OGIxOWQwZGFjMzkiLCJpYXQiOjE2NzU3NTMzMDksImV4cCI6MTY3NjM1ODEwOX0.svpqPyQP4inDTjbA74eY29ch_i1azy6EfLhWrJuhrMEGCJDmrIsIz6zoE_F6WHoo0oLL5kBUKShPmfV57Vvk5A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8181/v1.0/vehicle/owner?page=0&size=10&search=",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8181",
+							"path": [
+								"v1.0",
+								"vehicle",
+								"owner"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								},
+								{
+									"key": "search",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create owner",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmZDcxMzM0ZC1kZTlhLTQ1NWEtODVmZC01OGIxOWQwZGFjMzkiLCJpYXQiOjE2NzU3NTMzMDksImV4cCI6MTY3NjM1ODEwOX0.svpqPyQP4inDTjbA74eY29ch_i1azy6EfLhWrJuhrMEGCJDmrIsIz6zoE_F6WHoo0oLL5kBUKShPmfV57Vvk5A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"Trần Diệp Anh\",\r\n    \"phoneNumber\": \"0323456789\",\r\n    \"address\": \"Hà Nội\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8181/v1.0/vehicle/owner",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8181",
+							"path": [
+								"v1.0",
+								"vehicle",
+								"owner"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update owner",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmZDcxMzM0ZC1kZTlhLTQ1NWEtODVmZC01OGIxOWQwZGFjMzkiLCJpYXQiOjE2NzU3NTMzMDksImV4cCI6MTY3NjM1ODEwOX0.svpqPyQP4inDTjbA74eY29ch_i1azy6EfLhWrJuhrMEGCJDmrIsIz6zoE_F6WHoo0oLL5kBUKShPmfV57Vvk5A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"Trần Thu Hằng\",\r\n    \"phoneNumber\": \"0979206295\",\r\n    \"address\": \"Tiền Hải\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8181/v1.0/vehicle/owner/16f4795b-72a9-4342-99dd-6d85592ae058",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8181",
+							"path": [
+								"v1.0",
+								"vehicle",
+								"owner",
+								"16f4795b-72a9-4342-99dd-6d85592ae058"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete owner",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmZDcxMzM0ZC1kZTlhLTQ1NWEtODVmZC01OGIxOWQwZGFjMzkiLCJpYXQiOjE2NzU3NTMzMDksImV4cCI6MTY3NjM1ODEwOX0.svpqPyQP4inDTjbA74eY29ch_i1azy6EfLhWrJuhrMEGCJDmrIsIz6zoE_F6WHoo0oLL5kBUKShPmfV57Vvk5A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"uuids\": [\r\n        \"0d13f009-dfd9-4883-9c95-a5d43400b289\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8181/v1.0/vehicle/owner",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8181",
+							"path": [
+								"v1.0",
+								"vehicle",
+								"owner"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all vehicle",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmZDcxMzM0ZC1kZTlhLTQ1NWEtODVmZC01OGIxOWQwZGFjMzkiLCJpYXQiOjE2NzU3NTMzMDksImV4cCI6MTY3NjM1ODEwOX0.svpqPyQP4inDTjbA74eY29ch_i1azy6EfLhWrJuhrMEGCJDmrIsIz6zoE_F6WHoo0oLL5kBUKShPmfV57Vvk5A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8181/v1.0/vehicle?page=0&size=10&search=",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8181",
+							"path": [
+								"v1.0",
+								"vehicle"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								},
+								{
+									"key": "search",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create vehicle",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmZDcxMzM0ZC1kZTlhLTQ1NWEtODVmZC01OGIxOWQwZGFjMzkiLCJpYXQiOjE2NzU3NTMzMDksImV4cCI6MTY3NjM1ODEwOX0.svpqPyQP4inDTjbA74eY29ch_i1azy6EfLhWrJuhrMEGCJDmrIsIz6zoE_F6WHoo0oLL5kBUKShPmfV57Vvk5A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"vehicleType\": \"BIKE\",\r\n    \"place\": \"\",\r\n    \"color\": \"xanh dương\",\r\n    \"brand\": \"\",\r\n    \"owner\": \"0d13f009-dfd9-4883-9c95-a5d43400b289\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8181/v1.0/vehicle",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8181",
+							"path": [
+								"v1.0",
+								"vehicle"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update vehicle",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmZDcxMzM0ZC1kZTlhLTQ1NWEtODVmZC01OGIxOWQwZGFjMzkiLCJpYXQiOjE2NzU3NTMzMDksImV4cCI6MTY3NjM1ODEwOX0.svpqPyQP4inDTjbA74eY29ch_i1azy6EfLhWrJuhrMEGCJDmrIsIz6zoE_F6WHoo0oLL5kBUKShPmfV57Vvk5A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"vehicleType\": \"MOTO\",\r\n    \"place\": \"17B8 54561\",\r\n    \"color\": \"vàng\",\r\n    \"brand\": \"ex\",\r\n    \"owner\": \"0d13f009-dfd9-4883-9c95-a5d43400b289\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8181/v1.0/vehicle/0dd06220-47c0-4a3c-86e1-44f00c584125",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8181",
+							"path": [
+								"v1.0",
+								"vehicle",
+								"0dd06220-47c0-4a3c-86e1-44f00c584125"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete vehicle",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmZDcxMzM0ZC1kZTlhLTQ1NWEtODVmZC01OGIxOWQwZGFjMzkiLCJpYXQiOjE2NzU3NTMzMDksImV4cCI6MTY3NjM1ODEwOX0.svpqPyQP4inDTjbA74eY29ch_i1azy6EfLhWrJuhrMEGCJDmrIsIz6zoE_F6WHoo0oLL5kBUKShPmfV57Vvk5A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"uuids\": [\r\n        \"05bdf24a-a050-490f-a1f1-f1d991bea29a\", \"0dd06220-47c0-4a3c-86e1-44f00c584125\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8181/v1.0/vehicle",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8181",
+							"path": [
+								"v1.0",
+								"vehicle"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get vehicle by owner",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmZDcxMzM0ZC1kZTlhLTQ1NWEtODVmZC01OGIxOWQwZGFjMzkiLCJpYXQiOjE2NzU3NTMzMDksImV4cCI6MTY3NjM1ODEwOX0.svpqPyQP4inDTjbA74eY29ch_i1azy6EfLhWrJuhrMEGCJDmrIsIz6zoE_F6WHoo0oLL5kBUKShPmfV57Vvk5A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8181/v1.0/vehicle/owner/0d13f009-dfd9-4883-9c95-a5d43400b289",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8181",
+							"path": [
+								"v1.0",
+								"vehicle",
+								"owner",
+								"0d13f009-dfd9-4883-9c95-a5d43400b289"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "management-service",
+			"item": [
+				{
+					"name": "Get all event",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmZDcxMzM0ZC1kZTlhLTQ1NWEtODVmZC01OGIxOWQwZGFjMzkiLCJpYXQiOjE2Nzk5Mjk0MzAsImV4cCI6MTY4MDUzNDIzMH0.IuGcb_Oxdfr5bfXGB2l9wpxelO-v_Lspbd-U32W2HkrMfsdW3e4RRQjcTy98uklOhR0TLm7xIQofcjAeWXKu6w",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"page\": 0,\r\n    \"size\": 10,\r\n    \"startDate\": \"2023-02-28 09:08:00\",\r\n    \"endDate\": \"2023-03-15 23:40:00\",\r\n    \"objectType\": [\"CAR\", \"MOTO\", \"TRAM\"],\r\n    \"eventType\": [\"IN\", \"OUT\"],\r\n    \"sourceType\": [\"MANUAL\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8181/v1.0/management",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8181",
+							"path": [
+								"v1.0",
+								"management"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create manual event",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmZDcxMzM0ZC1kZTlhLTQ1NWEtODVmZC01OGIxOWQwZGFjMzkiLCJpYXQiOjE2Nzg2ODgzODQsImV4cCI6MTY3OTI5MzE4NH0.8OvJTKqOiKrxwe6lzpCFSXenqPRvZtfKh6mcE-L_gUDAmIbNEiPFvbD94G1q6kwhFr8alr98XRbgmbMnHzYj_Q",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"eventType\": 2,\r\n    \"objectType\": 1,\r\n    \"place\": \"123\",\r\n    \"image\": \"abc.jpg\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8181/v1.0/management/event",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8181",
+							"path": [
+								"v1.0",
+								"management",
+								"event"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update manual event",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmZDcxMzM0ZC1kZTlhLTQ1NWEtODVmZC01OGIxOWQwZGFjMzkiLCJpYXQiOjE2NzY1MTgyMjIsImV4cCI6MTY3NzEyMzAyMn0.iKBeyYJefUwfHdeMoMo7HN91Fi5o7VJZKmv4u7hb9zzgGhjLDG4jY8Eto_Vz2gCGJiiO009pBMxEuwOyBhOC8g",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"eventType\": 1,\r\n    \"objectType\": 1,\r\n    \"place\": \"12345678\",\r\n    \"image\": \"abc.jpg\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8181/v1.0/management/event/017faa16-3808-429f-bc4f-0776ee681504",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8181",
+							"path": [
+								"v1.0",
+								"management",
+								"event",
+								"017faa16-3808-429f-bc4f-0776ee681504"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete multi event",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmZDcxMzM0ZC1kZTlhLTQ1NWEtODVmZC01OGIxOWQwZGFjMzkiLCJpYXQiOjE2NzY1MTgyMjIsImV4cCI6MTY3NzEyMzAyMn0.iKBeyYJefUwfHdeMoMo7HN91Fi5o7VJZKmv4u7hb9zzgGhjLDG4jY8Eto_Vz2gCGJiiO009pBMxEuwOyBhOC8g",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"uuids\": [\r\n        \"4542f072-c47b-4b5c-bb10-0984103aa2c2\", \"7ed34732-1fe6-44f7-ab29-cf5962a8baeb\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8181/v1.0/management/event",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8181",
+							"path": [
+								"v1.0",
+								"management",
+								"event"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Recognition plate event",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmZDcxMzM0ZC1kZTlhLTQ1NWEtODVmZC01OGIxOWQwZGFjMzkiLCJpYXQiOjE2Nzk5Mjk0MzAsImV4cCI6MTY4MDUzNDIzMH0.IuGcb_Oxdfr5bfXGB2l9wpxelO-v_Lspbd-U32W2HkrMfsdW3e4RRQjcTy98uklOhR0TLm7xIQofcjAeWXKu6w",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"place\": \"123\",\r\n    \"image\": \"haha\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8181/v1.0/management/event/recognition",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8181",
+							"path": [
+								"v1.0",
+								"management",
+								"event",
+								"recognition"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "report-service",
+			"item": [
+				{
+					"name": "report by object type",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmZDcxMzM0ZC1kZTlhLTQ1NWEtODVmZC01OGIxOWQwZGFjMzkiLCJpYXQiOjE2Nzg2ODgzODQsImV4cCI6MTY3OTI5MzE4NH0.8OvJTKqOiKrxwe6lzpCFSXenqPRvZtfKh6mcE-L_gUDAmIbNEiPFvbD94G1q6kwhFr8alr98XRbgmbMnHzYj_Q",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8181/v1.0/report?filterBy=object&filterTimeLevel=day",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8181",
+							"path": [
+								"v1.0",
+								"report"
+							],
+							"query": [
+								{
+									"key": "filterBy",
+									"value": "object"
+								},
+								{
+									"key": "filterTimeLevel",
+									"value": "day"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "report by status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmZDcxMzM0ZC1kZTlhLTQ1NWEtODVmZC01OGIxOWQwZGFjMzkiLCJpYXQiOjE2Nzg2ODgzODQsImV4cCI6MTY3OTI5MzE4NH0.8OvJTKqOiKrxwe6lzpCFSXenqPRvZtfKh6mcE-L_gUDAmIbNEiPFvbD94G1q6kwhFr8alr98XRbgmbMnHzYj_Q",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8181/v1.0/report?filterBy=status&filterTimeLevel=day",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8181",
+							"path": [
+								"v1.0",
+								"report"
+							],
+							"query": [
+								{
+									"key": "filterBy",
+									"value": "status"
+								},
+								{
+									"key": "filterTimeLevel",
+									"value": "day"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
