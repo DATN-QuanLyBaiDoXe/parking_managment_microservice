@@ -11,6 +11,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EventPagingDTO {
-    List<Event> eventList;
+    List<EventResponse> eventList;
     Long total;
 }

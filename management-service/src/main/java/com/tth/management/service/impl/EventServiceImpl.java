@@ -19,6 +19,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.tth.management.repository.EventCustomizeRepository.transform;
+
 @Service
 public class EventServiceImpl implements EventService {
 
@@ -58,7 +60,7 @@ public class EventServiceImpl implements EventService {
         Page<Event> result = eventEsRepository.findByIsNewestAndEventTypeInAndObjectTypeInAndSourceTypeInAndCreatedDateBetween(
                 PageRequest.of(page, size, Sort.by("createdDate").descending()), true
                 ,eventType, objectType, sourceType, startDate, endDate);
-        EventPagingDTO dto = new EventPagingDTO(result.getContent(), result.getTotalElements());
+        EventPagingDTO dto = new EventPagingDTO(transform(result.getContent()), result.getTotalElements());
         return dto;
     }
 

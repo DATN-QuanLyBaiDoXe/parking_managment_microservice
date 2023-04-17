@@ -1,9 +1,8 @@
 package com.tth.management.repository;
 
-import com.tth.management.model.Event;
-import com.tth.management.model.ObjectType;
-import com.tth.management.model.Status;
+import com.tth.management.model.*;
 import com.tth.management.model.dto.EventPagingDTO;
+import com.tth.management.model.dto.EventResponse;
 import com.tth.management.model.dto.ReportDTO;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -93,12 +92,65 @@ public class EventCustomizeRepository {
                 count = Long.parseLong(countResult.toString());
             }
             EventPagingDTO eventPagingDTO = new EventPagingDTO();
-            eventPagingDTO.setEventList(eventList);
+            eventPagingDTO.setEventList(transform(eventList));
             eventPagingDTO.setTotal(count);
             return eventPagingDTO;
         } finally {
             closeSession(session);
         }
+    }
+
+    public static List<EventResponse> transform(List<Event> eventList) {
+        return eventList.parallelStream().map(event -> {
+                    EventResponse response = new EventResponse();
+                    response.setCreatedDate(event.getCreatedDate());
+                    response.setDescription(event.getDescription());
+                    response.setImage(event.getImage());
+                    response.setPlace(event.getPlace());
+                    response.setUuid(event.getUuid());
+                    response.setEventType(getEventType(event.getEventType()));
+                    response.setObjectType(getObjectType(event.getObjectType()));
+                    response.setSourceType(getSourceType(event.getSourceType()));
+                    response.setStatus(getStatus(event.getStatus()));
+                    return response;
+                }
+        ).collect(Collectors.toList());
+    }
+
+    public static Integer getStatus(Status status) {
+        for (Status type : Status.values()){
+            if(type.equals(status)){
+                return type.getCode();
+            }
+        }
+        return null;
+    }
+
+    public static Integer getSourceType(SourceType sourceType) {
+        for (SourceType type : SourceType.values()){
+            if(type.equals(sourceType)){
+                return type.getCode();
+            }
+        }
+        return null;
+    }
+
+    public static Integer getObjectType(ObjectType objectType) {
+        for (ObjectType type : ObjectType.values()){
+            if(type.equals(objectType)){
+                return type.getCode();
+            }
+        }
+        return null;
+    }
+
+    public static Integer getEventType(EventType eventType) {
+        for (EventType type : EventType.values()){
+            if(type.equals(eventType)){
+                return type.getCode();
+            }
+        }
+        return null;
     }
 
     public void eventPartitionMonth(String table) {
