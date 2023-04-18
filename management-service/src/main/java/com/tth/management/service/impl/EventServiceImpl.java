@@ -116,7 +116,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Event findByUuid(String uuid) {
-        return eventRepository.findByParentIdAndIsNewestAndStatusNotIn(uuid, true, List.of(5, 0));
+        return eventRepository.findByParentIdAndIsNewestAndStatusNotIn(uuid, true, List.of(Status.WRONG, Status.UNKNOWN));
 //        return eventEsRepository.findByParentIdAndIsNewestAndStatusNotIn(uuid, true, List.of(5, 0));
     }
 
@@ -138,7 +138,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Event findById(String id) {
-        return eventRepository.findByParentIdAndIsNewestAndStatusNotIn(id, true, List.of(0, 5));
+        return eventRepository.findByParentIdAndIsNewestAndStatusNotIn(id, true, List.of(Status.WRONG, Status.UNKNOWN));
     }
 
     @Override

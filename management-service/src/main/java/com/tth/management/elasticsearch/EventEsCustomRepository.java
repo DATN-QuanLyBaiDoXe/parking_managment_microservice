@@ -18,13 +18,9 @@ import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
-import org.springframework.data.elasticsearch.core.query.Query;
-import org.springframework.data.elasticsearch.core.query.StringQuery;
 import org.springframework.stereotype.Repository;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,10 +32,7 @@ public class EventEsCustomRepository {
     @Autowired
     private ElasticsearchOperations elasticsearchOperations;
 
-    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    SimpleDateFormat dateFormatTime = new SimpleDateFormat("yyyy-MM-dd");
-
-    public Page<Event> filterEvent(Integer page, Integer size, boolean isNewest, List<String> eventType, List<String> objectType, List<String> sourceType, String startDate, String endDate){
+    public Page<Event> filterEvent(Integer page, Integer size, boolean isNewest, List<String> eventType, List<String> objectType, List<String> sourceType, String startDate, String endDate) {
         try {
             Pageable pageable = PageRequest.of(page, size);
             NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
