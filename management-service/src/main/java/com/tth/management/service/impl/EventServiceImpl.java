@@ -103,6 +103,7 @@ public class EventServiceImpl implements EventService {
         newEvent.setImage((String) bodyParam.get("image"));
         newEvent.setEventType(EventType.of((Integer) bodyParam.get("eventType")));
         newEvent.setObjectType(ObjectType.of((Integer) bodyParam.get("objectType")));
+        newEvent.setDescription((String) bodyParam.get("description"));
         newEvent.setCreatedDate(event.getCreatedDate());
         newEvent.setCreatedBy(event.getCreatedBy());
         newEvent.setModifiedBy(uuid);
