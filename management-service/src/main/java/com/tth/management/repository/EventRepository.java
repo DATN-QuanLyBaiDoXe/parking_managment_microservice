@@ -15,7 +15,7 @@ public interface EventRepository extends JpaRepository<Event, String> {
 
     Page<Event> findByIsNewestAndEventTypeAndObjectTypeAndSourceTypeAndCreatedDateBetween(Pageable pageable, boolean isNewest, Integer eventType, Integer objectType, Integer sourceType, Date startDate, Date endDate);
 
-    Event findByParentIdAndIsNewestAndStatusNotIn(String parentId, boolean isNewest, List<Status> status);
+    Event findByUuidAndIsNewestAndStatusNotIn(String uuid, boolean isNewest, List<Status> status);
 
     List<Event> findByUuidInAndIsNewest(List<String> parentId, boolean isNewest);
 }
