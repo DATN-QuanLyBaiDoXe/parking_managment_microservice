@@ -1,5 +1,6 @@
 package com.tth.management.service.impl;
 
+import com.tth.management.elasticsearch.EventEsCustomRepository;
 import com.tth.management.elasticsearch.EventEsRepository;
 import com.tth.management.model.*;
 import com.tth.management.model.dto.EventDTO;
@@ -33,9 +34,12 @@ public class EventServiceImpl implements EventService {
     @Autowired
     private EventCustomizeRepository eventCustomizeRepository;
 
+    @Autowired
+    private EventEsCustomRepository eventEsCustomRepository;
+
     @Override
     public EventPagingDTO getAllEvent(Map<String, Object> bodyParam) throws IOException {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         Integer page = bodyParam.get("page") == null ? 0 : (Integer) bodyParam.get("page");
         Integer size = bodyParam.get("size") == null ? 10 : (Integer) bodyParam.get("size");
         List<String> eventType = (List<String>) bodyParam.get("eventType");
@@ -43,23 +47,23 @@ public class EventServiceImpl implements EventService {
         List<String> objectType = (List<String>) bodyParam.get("objectType");
         String start = (String) bodyParam.get("startDate");
         String end = (String) bodyParam.get("endDate");
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.MONTH, -1);
-        Date startDate = cal.getTime();
-        Date endDate = new Date();
-        try {
-            if(start != null) {
-                startDate = format.parse(start);
-            }
-            if(end != null) {
-                endDate = format.parse(end);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        Page<Event> result = eventEsRepository.findByIsNewestAndEventTypeInAndObjectTypeInAndSourceTypeInAndCreatedDateBetween(
-                PageRequest.of(page, size, Sort.by("createdDate").descending()), true
-                ,eventType, objectType, sourceType, startDate, endDate);
+//        Calendar cal = Calendar.getInstance();
+//        cal.add(Calendar.MONTH, -1);
+//        Date startDate = cal.getTime();
+//        Date endDate = new Date();
+//        try {
+//            if(start != null) {
+//                startDate = format.parse(start);
+//            }
+//            if(end != null) {
+//                endDate = format.parse(end);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        List<Event> result = eventEsRepository.findByIsNewestAndEventTypeInAndObjectTypeInAndSourceTypeInAndCreatedDateGreaterThanEqualAndCreatedDateLessThanEqual(
+//                page, size, true, eventType, objectType, sourceType, start, end);
+        Page<Event> result = eventEsCustomRepository.filterEvent(page, size, true, eventType, objectType, sourceType, start, end);
         EventPagingDTO dto = new EventPagingDTO(transform(result.getContent()), result.getTotalElements());
         return dto;
     }
