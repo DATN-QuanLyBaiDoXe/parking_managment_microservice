@@ -45,6 +45,7 @@ public class EventServiceImpl implements EventService {
         List<String> eventType = (List<String>) bodyParam.get("eventType");
         List<String> sourceType = (List<String>) bodyParam.get("sourceType");
         List<String> objectType = (List<String>) bodyParam.get("objectType");
+        List<String> status = (List<String>) bodyParam.get("status");
         String start = (String) bodyParam.get("startDate");
         String end = (String) bodyParam.get("endDate");
 //        Calendar cal = Calendar.getInstance();
@@ -63,7 +64,7 @@ public class EventServiceImpl implements EventService {
 //        }
 //        List<Event> result = eventEsRepository.findByIsNewestAndEventTypeInAndObjectTypeInAndSourceTypeInAndCreatedDateGreaterThanEqualAndCreatedDateLessThanEqual(
 //                page, size, true, eventType, objectType, sourceType, start, end);
-        Page<Event> result = eventEsCustomRepository.filterEvent(page, size, true, eventType, objectType, sourceType, start, end);
+        Page<Event> result = eventEsCustomRepository.filterEvent(page, size, true, eventType, objectType, sourceType, start, end, status);
         EventPagingDTO dto = new EventPagingDTO(transform(result.getContent()), result.getTotalElements());
         return dto;
     }

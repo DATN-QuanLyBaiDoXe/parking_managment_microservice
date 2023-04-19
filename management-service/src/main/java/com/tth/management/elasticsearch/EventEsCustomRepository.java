@@ -32,7 +32,7 @@ public class EventEsCustomRepository {
     @Autowired
     private ElasticsearchOperations elasticsearchOperations;
 
-    public Page<Event> filterEvent(Integer page, Integer size, boolean isNewest, List<String> eventType, List<String> objectType, List<String> sourceType, String startDate, String endDate) {
+    public Page<Event> filterEvent(Integer page, Integer size, boolean isNewest, List<String> eventType, List<String> objectType, List<String> sourceType, String startDate, String endDate, List<String> status) {
         try {
             Pageable pageable = PageRequest.of(page, size);
             NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
@@ -64,6 +64,15 @@ public class EventEsCustomRepository {
                 BoolQueryBuilder boolQuery = QueryBuilders.boolQuery();
                 sourceType.forEach((dataVendor) -> {
                     boolQuery.should(QueryBuilders.matchPhraseQuery("sourceType", dataVendor));
+                });
+
+                boolQueryBuilder.must(boolQuery);
+            }
+
+            if (status != null && !status.isEmpty()) {
+                BoolQueryBuilder boolQuery = QueryBuilders.boolQuery();
+                status.forEach((dataVendor) -> {
+                    boolQuery.should(QueryBuilders.matchPhraseQuery("status", dataVendor));
                 });
 
                 boolQueryBuilder.must(boolQuery);
