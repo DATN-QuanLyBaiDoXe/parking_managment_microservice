@@ -3,5 +3,10 @@
     "path": "/report",
     "method": "GET",
     "rabbit": "rpc"
+  },
+  {
+    "path": "/report/money",
+    "method": "GET",
+    "rabbit": "rpc"
   }
 ]

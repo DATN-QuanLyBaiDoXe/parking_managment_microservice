@@ -11,12 +11,9 @@ import com.tth.management.repository.EventRepository;
 import com.tth.management.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -225,6 +222,15 @@ public class EventServiceImpl implements EventService {
         event.setStatus(Status.of(1));
         eventRepository.save(event);
         eventEsRepository.save(event);
+    }
+
+    @Override
+    public Long getTotalMoney() {
+        Long car = eventEsCustomRepository.getTotalMoney("CAR");
+        Long moto = eventEsCustomRepository.getTotalMoney("MOTO");
+        Long tram = eventEsCustomRepository.getTotalMoney("TRAM");
+        Long bike = eventEsCustomRepository.getTotalMoney("BIKE");
+        return car * 50000 + moto * 5000 + tram * 5000 + bike * 3000;
     }
 
     private static int randomInt(int min, int max) {

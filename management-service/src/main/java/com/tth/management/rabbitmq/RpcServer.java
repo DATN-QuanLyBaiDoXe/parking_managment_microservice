@@ -53,6 +53,8 @@ public class RpcServer {
                     case "GET":
                         if ("/management/report".equalsIgnoreCase(requestPath)) {
                             response = reportController.reportEvent(request.getRequestPath(), request.getRequestMethod(), urlParam, headerParam);
+                        } else if ("/management/report/general".equalsIgnoreCase(requestPath)) {
+                            response = reportController.reportGeneral(request.getRequestPath(), request.getRequestMethod(), urlParam, headerParam);
                         }
                         break;
                     case "POST":

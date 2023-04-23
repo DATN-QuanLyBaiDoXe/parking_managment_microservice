@@ -34,4 +34,6 @@ public interface EventService {
     List<ReportDTO> reportEventByStatus(String filterTimeLevel);
 
     void save(Event event);
+
+    Long getTotalMoney();
 }

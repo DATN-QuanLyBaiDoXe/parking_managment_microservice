@@ -22,6 +22,8 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
+import static com.tth.id.service.impl.UserServiceImpl.transformUserResponse;
+
 @Controller
 public class UserController extends BaseController {
 
@@ -114,8 +116,8 @@ public class UserController extends BaseController {
         } else {
             User user = userService.findByUuid(pathParam);
             if (user == null) {
-                response = new ResponseMessage(HttpStatus.NOT_FOUND.value(), "Không tìm thấy bản ghi",
-                        new MessageContent(HttpStatus.NOT_FOUND.value(), "Không tìm thấy bản ghi", null));
+                response = new ResponseMessage(HttpStatus.NOT_FOUND.value(), "Không tìm thấy người dùng",
+                        new MessageContent(HttpStatus.NOT_FOUND.value(), "Không tìm thấy người dùng", null));
             } else {
                 UserDTO userDTO = getUserDTOFromBodyParam(bodyParam);
                 String invalidData = new UserValidation().validateUser(userDTO);
@@ -166,8 +168,8 @@ public class UserController extends BaseController {
             } else {
                 User user = userService.findByUuid(dto.getUuid());
                 if (user == null) {
-                    response = new ResponseMessage(HttpStatus.NOT_FOUND.value(), "Không tìm thấy bản ghi",
-                            new MessageContent(HttpStatus.NOT_FOUND.value(), "Không tìm thấy bản ghi", null));
+                    response = new ResponseMessage(HttpStatus.NOT_FOUND.value(), "Không tìm thấy người dùng",
+                            new MessageContent(HttpStatus.NOT_FOUND.value(), "Không tìm thấy người dùng", null));
                 } else {
                     BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
                     if (encoder.matches(curPass, user.getPassword())) {
@@ -209,8 +211,8 @@ public class UserController extends BaseController {
                     response = new ResponseMessage(HttpStatus.OK.value(), "Xóa tài khoản thành công",
                             new MessageContent(HttpStatus.OK.value(), "Xóa tài khoản thành công", null));
                 } else {
-                    response = new ResponseMessage(HttpStatus.NOT_FOUND.value(), "Tài khoản không tồn tại",
-                            new MessageContent(HttpStatus.NOT_FOUND.value(), "Tài khoản không tồn tại", null));
+                    response = new ResponseMessage(HttpStatus.NOT_FOUND.value(), "Không tìm thấy người dùng",
+                            new MessageContent(HttpStatus.NOT_FOUND.value(), "Không tìm thấy người dùng", null));
                 }
             }
         }
@@ -243,6 +245,25 @@ public class UserController extends BaseController {
         userDTO.setAvatar(avatar);
         userDTO.setRole(role);
         return userDTO;
+    }
+
+    public ResponseMessage findUserByUuid(String requestUrl, String method, String urlParam, Map<String, String> headerParam, String pathParam) {
+        ResponseMessage response = null;
+        AuthorizationResponseDTO dto = getAuthorFromToken(headerParam);
+        if (dto == null) {
+            response = new ResponseMessage(HttpStatus.UNAUTHORIZED.value(), "Bạn chưa đăng nhập",
+                    new MessageContent(HttpStatus.UNAUTHORIZED.value(), "Bạn chưa đăng nhập", null));
+        } else {
+            User user = userService.findByUuid(pathParam);
+            if (user == null) {
+                response = new ResponseMessage(HttpStatus.NOT_FOUND.value(), "Không tìm thấy người dùng",
+                        new MessageContent(HttpStatus.NOT_FOUND.value(), "Không tìm thấy người dùng", null));
+            } else {
+                response = new ResponseMessage(HttpStatus.OK.value(), "Lấy chi tiết người dùng",
+                        new MessageContent(HttpStatus.OK.value(), "Lấy chi tiết người dùng", transformUserResponse(user)));
+            }
+        }
+        return response;
     }
 
 }

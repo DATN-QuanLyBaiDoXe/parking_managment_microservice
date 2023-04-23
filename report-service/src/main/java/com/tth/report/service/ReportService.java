@@ -7,4 +7,6 @@ import java.util.Map;
 public interface ReportService {
 
     ResponseMessage reportEvent(String urlParam, Map<String, String> headerParam);
+
+    ResponseMessage reportGeneral(String urlParam, Map<String, String> headerParam);
 }

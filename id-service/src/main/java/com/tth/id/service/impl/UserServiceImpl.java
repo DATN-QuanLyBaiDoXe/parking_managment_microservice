@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
         return transformUserResponse(newUser);
     }
 
-    private UserResponse transformUserResponse(User user) {
+    public static UserResponse transformUserResponse(User user) {
         UserResponse userResponse = new UserResponse();
         userResponse.setUsername(user.getUsername());
         userResponse.setFullName(user.getFullName());

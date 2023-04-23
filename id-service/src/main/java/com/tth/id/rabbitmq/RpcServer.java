@@ -52,7 +52,11 @@ public class RpcServer {
                 switch (request.getRequestMethod()) {
                     case "GET":
                         if ("/user".equalsIgnoreCase(requestPath)) {
-                            response = userController.getAllUsers(request.getRequestPath(), request.getRequestMethod(), urlParam, headerParam);
+                            if(StringUtil.isNullOrEmpty(pathParam)) {
+                                response = userController.getAllUsers(request.getRequestPath(), request.getRequestMethod(), urlParam, headerParam);
+                            } else {
+                                response = userController.findUserByUuid(request.getRequestPath(), request.getRequestMethod(), urlParam, headerParam, pathParam);
+                            }
                         }
                         break;
                     case "POST":

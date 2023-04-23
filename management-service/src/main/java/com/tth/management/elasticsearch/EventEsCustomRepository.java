@@ -20,7 +20,9 @@ import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Repository;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -115,7 +117,53 @@ public class EventEsCustomRepository {
         return null;
     }
 
-    private Event transform(Object content) {
-        return (Event) content;
+    public Long getTotalMoney(String objectType) {
+        try {
+            NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
+            nativeSearchQueryBuilder.withTrackTotalHits(true); // https://www.elastic.co/guide/en/elasticsearch/reference/7.17/search-your-data.html#track-total-hits
+
+            BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+            boolQueryBuilder.must(QueryBuilders.termQuery("isNewest", true));
+
+            if (!StringUtil.isNullOrEmpty(objectType)) {
+                boolQueryBuilder.must(QueryBuilders.matchQuery("objectType", objectType));
+            }
+
+            List<String> status = List.of("NOT_SEEN", "VERIFICATION", "PROCESSING", "PROCESSED");
+
+            if (status != null && !status.isEmpty()) {
+                BoolQueryBuilder boolQuery = QueryBuilders.boolQuery();
+                status.forEach((dataVendor) -> {
+                    boolQuery.should(QueryBuilders.matchPhraseQuery("status", dataVendor));
+                });
+
+                boolQueryBuilder.must(boolQuery);
+            }
+
+            SimpleDateFormat formatStart = new SimpleDateFormat("yyyy-MM-dd'T'00:00:00");
+            String startDate = formatStart.format(new Date());
+            SimpleDateFormat formatEnd = new SimpleDateFormat("yyyy-MM-dd'T'23:59:59");
+            String endDate = formatEnd.format(new Date());
+
+            if (!StringUtil.isNullOrEmpty(startDate) && !StringUtil.isNullOrEmpty(endDate)) {
+                boolQueryBuilder.must(QueryBuilders.rangeQuery("createdDate").gte(startDate).lte(endDate));
+            }
+
+            // withFilter
+            nativeSearchQueryBuilder.withFilter(boolQueryBuilder);
+
+            NativeSearchQuery searchQuery = nativeSearchQueryBuilder.build();
+            SearchHits<Object> searchHits = elasticsearchOperations
+                    .search(searchQuery,
+                            Object.class,
+                            IndexCoordinates.of("event"));
+            return searchHits.getTotalHits();
+        } catch (Exception ex) {
+            LOGGER.error("ERROR filter vsat media analyzed: ", ex);
+            ex.printStackTrace();
+        }
+
+        return null;
     }
+
 }

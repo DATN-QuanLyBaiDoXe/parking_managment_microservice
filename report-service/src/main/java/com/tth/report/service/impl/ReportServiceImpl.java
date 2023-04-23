@@ -54,4 +54,33 @@ public class ReportServiceImpl implements ReportService {
             return null;
         }
     }
+
+    @Override
+    public ResponseMessage reportGeneral(String urlParam, Map<String, String> headerParam) {
+        RequestMessage userRpcRequest = new RequestMessage();
+        userRpcRequest.setRequestMethod("GET");
+        userRpcRequest.setRequestPath(RabbitMQProperties.REPORT_GENERAL_URL);
+        userRpcRequest.setVersion(ResourcePath.VERSION);
+        userRpcRequest.setBodyParam(null);
+        userRpcRequest.setUrlParam(urlParam);
+        userRpcRequest.setHeaderParam(headerParam);
+        String result = rabbitMQClient.callRpcService(RabbitMQProperties.MANAGEMENT_RPC_EXCHANGE,
+                RabbitMQProperties.MANAGEMENT_RPC_QUEUE, RabbitMQProperties.MANAGEMENT_RPC_KEY, userRpcRequest.toJsonString());
+        LOGGER.info("report event - result: " + result);
+
+        if (result != null) {
+            ObjectMapper mapper = new ObjectMapper();
+            ResponseMessage response = null;
+            try {
+                response = mapper.readValue(result, ResponseMessage.class);
+                return response;
+            } catch (JsonProcessingException ex) {
+                LOGGER.info("Lỗi parse json khi gọi user service verify: " + ex.toString());
+                return null;
+            }
+        } else {
+            //Forbidden
+            return null;
+        }
+    }
 }
