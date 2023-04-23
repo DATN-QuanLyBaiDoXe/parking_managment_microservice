@@ -19,6 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -203,13 +204,20 @@ public class UserController extends BaseController {
                 List<User> userList = userService.findByUuidIn(uuids);
                 if (userList != null && !userList.isEmpty()) {
                     //ko dc xoa admin va chinh minh
-                    userList.stream().filter(user -> ("admin").equalsIgnoreCase(user.getUsername()) || dto.getUuid().equals(user.getUuid()))
-                            .forEachOrdered(user -> {
-                                uuids.remove(user.getUuid());
-                            });
-                    userService.deleteMultiUser(userList);
-                    response = new ResponseMessage(HttpStatus.OK.value(), "Xóa tài khoản thành công",
-                            new MessageContent(HttpStatus.OK.value(), "Xóa tài khoản thành công", null));
+                    List<User> userNotDelete = new ArrayList<>();
+                    userList.stream().filter((user) -> ("admin".equalsIgnoreCase(user.getUsername()) || dto.getUuid().equals(user.getUuid())))
+                            .forEachOrdered((user) -> {
+                        userNotDelete.add(user);
+                    });
+                    userList.removeAll(userNotDelete);
+                    if(userList != null && !userList.isEmpty()) {
+                        userService.deleteMultiUser(userList);
+                        response = new ResponseMessage(HttpStatus.OK.value(), "Xóa tài khoản thành công",
+                                new MessageContent(HttpStatus.OK.value(), "Xóa tài khoản thành công", null));
+                    } else {
+                        response = new ResponseMessage(HttpStatus.FORBIDDEN.value(), "Không được xóa admin hoặc chính mình",
+                                new MessageContent(HttpStatus.FORBIDDEN.value(), "Không được xóa admin hoặc chính mình", null));
+                    }
                 } else {
                     response = new ResponseMessage(HttpStatus.NOT_FOUND.value(), "Không tìm thấy người dùng",
                             new MessageContent(HttpStatus.NOT_FOUND.value(), "Không tìm thấy người dùng", null));

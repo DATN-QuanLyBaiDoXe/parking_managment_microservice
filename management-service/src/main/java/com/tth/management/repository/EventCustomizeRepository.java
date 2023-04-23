@@ -213,7 +213,7 @@ public class EventCustomizeRepository {
         Session session = openSession();
         try {
             StringBuilder queryString = new StringBuilder();
-            queryString.append("SELECT status, count(status) FROM event");
+            queryString.append("SELECT status, count(status) FROM event ");
             queryString.append("WHERE date_trunc('").append(filterTimeLevel).append("', created_date) = date_trunc('").append(filterTimeLevel).append("', now()) ");
             queryString.append("AND is_newest = true ");
             queryString.append("GROUP BY status ");
