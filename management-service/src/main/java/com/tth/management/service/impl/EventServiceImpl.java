@@ -6,6 +6,7 @@ import com.tth.management.model.*;
 import com.tth.management.model.dto.EventDTO;
 import com.tth.management.model.dto.EventPagingDTO;
 import com.tth.management.model.dto.ReportDTO;
+import com.tth.management.model.dto.ReportDTOResponse;
 import com.tth.management.repository.EventCustomizeRepository;
 import com.tth.management.repository.EventRepository;
 import com.tth.management.service.EventService;
@@ -14,10 +15,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.tth.management.repository.EventCustomizeRepository.transform;
+import static java.util.stream.Collectors.groupingBy;
 
 @Service
 public class EventServiceImpl implements EventService {
@@ -231,6 +236,146 @@ public class EventServiceImpl implements EventService {
         Long tram = eventEsCustomRepository.getTotalMoney("TRAM");
         Long bike = eventEsCustomRepository.getTotalMoney("BIKE");
         return car * 50000 + moto * 5000 + tram * 5000 + bike * 3000;
+    }
+
+    @Override
+    public List<ReportDTOResponse> reportEventChartByStatus(String filterTimeLevel) throws ParseException {
+        List<ReportDTOResponse> listResult = new ArrayList<>();
+        String pattern = getPatternByTimeLevel(filterTimeLevel);
+        List<ReportDTO> eventList = eventCustomizeRepository.reportEventChartByStatus(filterTimeLevel, pattern);
+        List<String> listKey = getKey(filterTimeLevel);
+        Map<String, Map<String, List<ReportDTO>>> postsPerType = eventList.stream()
+                .collect(groupingBy((ReportDTO::getDate), groupingBy(ReportDTO::getName)));
+        postsPerType.entrySet().stream().forEach(n -> {
+            ReportDTOResponse response = new ReportDTOResponse();
+            List<ReportDTO> reportDTOList = new ArrayList<>();
+            response.setTime(convertDateVds(pattern, n.getKey()));
+            n.getValue().entrySet().stream().forEach(m -> {
+                ReportDTO reportDTO = new ReportDTO();
+                reportDTO.setName(m.getKey());
+                reportDTO.setCode(m.getValue().size() == 0 ? 0 : m.getValue().get(0).getCode());
+                reportDTO.setTotal(m.getValue().size());
+                reportDTOList.add(reportDTO);
+            });
+            response.setReportDTOList(reportDTOList);
+            listResult.add(response);
+        });
+
+        List<String> listKeyOf = listResult.stream().map(n -> n.getTime()).collect(Collectors.toList());
+        Collection<String> similar = new HashSet<>(listKey);
+        Collection<String> different = new HashSet<>();
+        different.addAll(listKey);
+        different.addAll(listKeyOf);
+        similar.retainAll(listKeyOf);
+        different.removeAll(similar);
+        if (!different.isEmpty()) {
+            different.stream().forEach(n -> {
+                ReportDTOResponse responseChartOne = new ReportDTOResponse();
+                responseChartOne.setTime(n);
+                listResult.add(responseChartOne);
+            });
+        }
+
+        listResult.sort(Comparator.comparing(ReportDTOResponse::getTime));
+        return listResult;
+    }
+
+    @Override
+    public List<ReportDTOResponse> reportEventChartByObject(String filterTimeLevel) throws ParseException {
+        List<ReportDTOResponse> listResult = new ArrayList<>();
+        String pattern = getPatternByTimeLevel(filterTimeLevel);
+        List<ReportDTO> eventList = eventCustomizeRepository.reportEventChartByObject(filterTimeLevel, pattern);
+        List<String> listKey = getKey(filterTimeLevel);
+        Map<String, Map<String, List<ReportDTO>>> postsPerType = eventList.stream()
+                .collect(groupingBy((ReportDTO::getDate), groupingBy(ReportDTO::getName)));
+        postsPerType.entrySet().stream().forEach(n -> {
+            ReportDTOResponse response = new ReportDTOResponse();
+            List<ReportDTO> reportDTOList = new ArrayList<>();
+            response.setTime(convertDateVds(pattern, n.getKey()));
+            n.getValue().entrySet().stream().forEach(m -> {
+                ReportDTO reportDTO = new ReportDTO();
+                reportDTO.setName(m.getKey());
+                reportDTO.setCode(m.getValue().size() == 0 ? 0 : m.getValue().get(0).getCode());
+                reportDTO.setTotal(m.getValue().size());
+                reportDTOList.add(reportDTO);
+            });
+            response.setReportDTOList(reportDTOList);
+            listResult.add(response);
+        });
+
+        List<String> listKeyOf = listResult.stream().map(n -> n.getTime()).collect(Collectors.toList());
+        Collection<String> similar = new HashSet<>(listKey);
+        Collection<String> different = new HashSet<>();
+        different.addAll(listKey);
+        different.addAll(listKeyOf);
+        similar.retainAll(listKeyOf);
+        different.removeAll(similar);
+        if (!different.isEmpty()) {
+            different.stream().forEach(n -> {
+                ReportDTOResponse responseChartOne = new ReportDTOResponse();
+                responseChartOne.setTime(n);
+                listResult.add(responseChartOne);
+            });
+        }
+
+        listResult.sort(Comparator.comparing(ReportDTOResponse::getTime));
+        return listResult;
+    }
+
+    public String convertDateVds(String pattern, String input) {
+        String[] split = input.split("/");
+        if (split.length > 0) {
+            if(pattern.equalsIgnoreCase("HH24:00")) {
+                String[] spl = input.split(":");
+                return spl[0] + ":00";
+            } else if (pattern.equalsIgnoreCase("dd/MM/yyyy")) {
+                return split[0] + "/" + split[1];
+            } else {
+                return split[0] + "/" + split[1];
+            }
+        } else {
+            return input;
+        }
+    }
+
+    private List<String> getKey(String filterTimeLevel) throws ParseException {
+        List<String> result = new ArrayList<>();
+        Calendar cal = Calendar.getInstance();
+        if(filterTimeLevel.equalsIgnoreCase("day")){
+            for (int i = 0; i < 24; i++) {
+                DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+                cal.set(Calendar.HOUR_OF_DAY, i);
+                String date = convertDateVds("HH24:00", dateFormat.format(cal.getTime()));
+                result.add(date);
+            }
+        } else if (filterTimeLevel.equalsIgnoreCase("year")) {
+            for (int i = 0; i < 12; i++) {
+                DateFormat dateFormat = new SimpleDateFormat("MM/yyyy");
+                cal.set(Calendar.MONTH, i);
+                String date = convertDateVds("MM/yyyy", dateFormat.format(cal.getTime()));
+                result.add(date);
+            }
+        } else {
+            for (int i = 1; i < cal.getActualMaximum(Calendar.DATE) + 1; i++) {
+                DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                cal.set(Calendar.DATE, i);
+                String date = convertDateVds("dd/MM/yyyy", dateFormat.format(cal.getTime()));
+                result.add(date);
+            }
+        }
+        return result;
+    }
+
+    private String getPatternByTimeLevel(String filterTimeLevel) {
+        String pattern = null;
+        if(filterTimeLevel.equalsIgnoreCase("day")) {
+            pattern = "HH24:ss";
+        } else if(filterTimeLevel.equalsIgnoreCase("month")) {
+            pattern = "dd/MM";
+        } else if(filterTimeLevel.equalsIgnoreCase("year")) {
+            pattern = "MM/yyyy";
+        }
+        return pattern;
     }
 
     private static int randomInt(int min, int max) {

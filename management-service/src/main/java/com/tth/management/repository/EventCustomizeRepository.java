@@ -4,6 +4,7 @@ import com.tth.management.model.*;
 import com.tth.management.model.dto.EventPagingDTO;
 import com.tth.management.model.dto.EventResponse;
 import com.tth.management.model.dto.ReportDTO;
+import com.tth.management.model.dto.ReportDTOResponse;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -190,6 +191,7 @@ public class EventCustomizeRepository {
             StringBuilder queryString = new StringBuilder();
             queryString.append("SELECT object_type, count(object_type) FROM event ");
             queryString.append("WHERE date_trunc('").append(filterTimeLevel).append("', created_date) = date_trunc('").append(filterTimeLevel).append("', now()) ");
+            queryString.append("AND is_newest = true ");
             queryString.append("GROUP BY object_type ");
             Query query = session.createNativeQuery(queryString.toString());
             List<Object[]> queryResultList = query.getResultList();
@@ -211,8 +213,9 @@ public class EventCustomizeRepository {
         Session session = openSession();
         try {
             StringBuilder queryString = new StringBuilder();
-            queryString.append("SELECT status, count(status) FROM event ");
+            queryString.append("SELECT status, count(status) FROM event");
             queryString.append("WHERE date_trunc('").append(filterTimeLevel).append("', created_date) = date_trunc('").append(filterTimeLevel).append("', now()) ");
+            queryString.append("AND is_newest = true ");
             queryString.append("GROUP BY status ");
             Query query = session.createNativeQuery(queryString.toString());
             List<Object[]> queryResultList = query.getResultList();
@@ -222,6 +225,52 @@ public class EventCustomizeRepository {
                 reportDTO.setCode(code);
                 reportDTO.setName(Status.of(code).getType());
                 reportDTO.setTotal(Integer.parseInt(item[1].toString()));
+                return reportDTO;
+            }).collect(Collectors.toList());
+            return reportDTOList;
+        } finally {
+            closeSession(session);
+        }
+    }
+
+    public List<ReportDTO> reportEventChartByObject(String filterTimeLevel, String pattern) {
+        Session session = openSession();
+        try {
+            StringBuilder queryString = new StringBuilder();
+            queryString.append("SELECT e.object_type, to_char(e.created_date,'").append(pattern).append("') as date FROM event e ");
+            queryString.append("WHERE date_trunc('").append(filterTimeLevel).append("', created_date) = date_trunc('").append(filterTimeLevel).append("', now()) ");
+            queryString.append("AND e.is_newest = true ");
+            Query query = session.createNativeQuery(queryString.toString());
+            List<Object[]> resultList = query.getResultList();
+            List<ReportDTO> reportDTOList = resultList.stream().map(item -> {
+                ReportDTO reportDTO = new ReportDTO();
+                Integer code = Integer.parseInt(item[0].toString());
+                reportDTO.setCode(code);
+                reportDTO.setName(ObjectType.of(code).getDescription());
+                reportDTO.setDate(item[1].toString());
+                return reportDTO;
+            }).collect(Collectors.toList());
+            return reportDTOList;
+        } finally {
+            closeSession(session);
+        }
+    }
+
+    public List<ReportDTO> reportEventChartByStatus(String filterTimeLevel, String pattern) {
+        Session session = openSession();
+        try {
+            StringBuilder queryString = new StringBuilder();
+            queryString.append("SELECT e.status, to_char(e.created_date,'").append(pattern).append("') as date FROM event e ");
+            queryString.append("WHERE date_trunc('").append(filterTimeLevel).append("', created_date) = date_trunc('").append(filterTimeLevel).append("', now()) ");
+            queryString.append("AND e.is_newest = true ");
+            Query query = session.createNativeQuery(queryString.toString());
+            List<Object[]> resultList = query.getResultList();
+            List<ReportDTO> reportDTOList = resultList.stream().map(item -> {
+                ReportDTO reportDTO = new ReportDTO();
+                Integer code = Integer.parseInt(item[0].toString());
+                reportDTO.setCode(code);
+                reportDTO.setName(Status.of(code).getType());
+                reportDTO.setDate(item[1].toString());
                 return reportDTO;
             }).collect(Collectors.toList());
             return reportDTOList;

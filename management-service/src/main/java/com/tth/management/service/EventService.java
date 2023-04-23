@@ -4,8 +4,10 @@ import com.tth.management.model.Event;
 import com.tth.management.model.dto.EventDTO;
 import com.tth.management.model.dto.EventPagingDTO;
 import com.tth.management.model.dto.ReportDTO;
+import com.tth.management.model.dto.ReportDTOResponse;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -36,4 +38,8 @@ public interface EventService {
     void save(Event event);
 
     Long getTotalMoney();
+
+    List<ReportDTOResponse> reportEventChartByObject(String filterTimeLevel) throws ParseException;
+
+    List<ReportDTOResponse> reportEventChartByStatus(String filterTimeLevel) throws ParseException;
 }

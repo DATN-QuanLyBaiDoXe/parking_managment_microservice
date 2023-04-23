@@ -51,6 +51,8 @@ public class RpcServer {
                             response = reportController.reportEvent(request.getRequestPath(), request.getRequestMethod(), urlParam, headerParam);
                         } else if ("/report/money".equalsIgnoreCase(requestPath)) {
                             response = reportController.reportGeneral(request.getRequestPath(), request.getRequestMethod(), urlParam, headerParam);
+                        } else if ("/report/chart".equalsIgnoreCase(requestPath)) {
+                            response = reportController.reportEventChart(request.getRequestPath(), request.getRequestMethod(), urlParam, headerParam);
                         }
                         break;
                     case "POST":

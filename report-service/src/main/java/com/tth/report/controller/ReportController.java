@@ -45,4 +45,19 @@ public class ReportController extends BaseController {
 
         return response;
     }
+
+    public ResponseMessage reportEventChart(String requestUrl, String method, String urlParam, Map<String, String> headerParam) {
+        ResponseMessage response = null;
+
+        AuthorizationResponseDTO dto = authenToken(headerParam);
+        if (dto == null) {
+            response = new ResponseMessage(HttpStatus.UNAUTHORIZED.value(), "Bạn chưa đăng nhập",
+                    new MessageContent(HttpStatus.UNAUTHORIZED.value(), "Bạn chưa đăng nhập", null));
+        } else {
+            ResponseMessage reportDTO = reportService.reportEventChart(urlParam, headerParam);
+            response = reportDTO;
+        }
+
+        return response;
+    }
 }

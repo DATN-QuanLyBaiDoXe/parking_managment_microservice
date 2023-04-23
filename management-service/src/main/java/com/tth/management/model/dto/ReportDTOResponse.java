@@ -4,14 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReportDTO {
+public class ReportDTOResponse {
 
-    private int code;
-    private String name;
-    private int total;
-    private String date;
+    private String time;
+    private List<ReportDTO> reportDTOList;
 
 }
