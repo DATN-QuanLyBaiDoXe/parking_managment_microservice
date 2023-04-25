@@ -369,7 +369,7 @@ public class EventServiceImpl implements EventService {
     private String getPatternByTimeLevel(String filterTimeLevel) {
         String pattern = null;
         if(filterTimeLevel.equalsIgnoreCase("day")) {
-            pattern = "HH24:ss";
+            pattern = "HH24:00";
         } else if(filterTimeLevel.equalsIgnoreCase("month")) {
             pattern = "dd/MM";
         } else if(filterTimeLevel.equalsIgnoreCase("year")) {
