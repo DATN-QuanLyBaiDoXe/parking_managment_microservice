@@ -13,5 +13,10 @@
     "path": "/report/chart",
     "method": "GET",
     "rabbit": "rpc"
+  },
+  {
+    "path": "/report/line",
+    "method": "GET",
+    "rabbit": "rpc"
   }
 ]

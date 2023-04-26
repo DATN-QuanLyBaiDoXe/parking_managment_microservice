@@ -278,4 +278,29 @@ public class EventCustomizeRepository {
             closeSession(session);
         }
     }
+
+    public List<ReportDTO> reportEventLine(Date startDate, Date endDate) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Session session = openSession();
+        try {
+            StringBuilder queryString = new StringBuilder();
+            queryString.append("SELECT e.event_type, to_char(e.created_date,'yyyy-MM-dd') as date, count(*) FROM event e ");
+            queryString.append("WHERE created_date >= '").append(format.format(startDate)).append("' AND created_date <= '").append(format.format(endDate)).append("' ");
+            queryString.append("AND e.is_newest = true GROUP BY date, e.event_type");
+            Query query = session.createNativeQuery(queryString.toString());
+            List<Object[]> resultList = query.getResultList();
+            List<ReportDTO> reportDTOList = resultList.stream().map(item -> {
+                ReportDTO reportDTO = new ReportDTO();
+                Integer code = Integer.parseInt(item[0].toString());
+                reportDTO.setCode(code);
+                reportDTO.setName(EventType.of(code).getDescription());
+                reportDTO.setDate(item[1].toString());
+                reportDTO.setTotal(Integer.parseInt(item[2].toString()));
+                return reportDTO;
+            }).collect(Collectors.toList());
+            return reportDTOList;
+        } finally {
+            closeSession(session);
+        }
+    }
 }

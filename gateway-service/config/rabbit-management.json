@@ -38,5 +38,10 @@
     "path": "/management/report/chart",
     "method": "GET",
     "rabbit": "rpc"
+  },
+  {
+    "path": "/management/report/line",
+    "method": "GET",
+    "rabbit": "rpc"
   }
 ]

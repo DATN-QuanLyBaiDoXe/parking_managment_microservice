@@ -49,6 +49,9 @@ public class RabbitMQProperties {
     @Value("${report.event-chart.url}")
     public static String REPORT_EVENT_CHART_URL;
 
+    @Value("${report.event-line.url}")
+    public static String REPORT_EVENT_LINE_URL;
+
     @Autowired
     public RabbitMQProperties(@Value("${user.rpc.exchange}") String userRpcExchange,
                               @Value("${user.rpc.queue}") String userRpcQueue,
@@ -62,7 +65,8 @@ public class RabbitMQProperties {
                               @Value("${report.rpc.key}") String reportRpcKey,
                               @Value("${report.event.url}") String reportEventUrl,
                               @Value("${report.general.url}") String reportGeneralUrl,
-                              @Value("${report.event-chart.url}") String reportEventChartUrl){
+                              @Value("${report.event-chart.url}") String reportEventChartUrl,
+                              @Value("${report.event-line.url}") String reportEventLineUrl){
         //user
         USER_RPC_EXCHANGE = userRpcExchange;
         USER_RPC_QUEUE = userRpcQueue;
@@ -82,5 +86,6 @@ public class RabbitMQProperties {
         REPORT_EVENT_URL = reportEventUrl;
         REPORT_GENERAL_URL = reportGeneralUrl;
         REPORT_EVENT_CHART_URL = reportEventChartUrl;
+        REPORT_EVENT_LINE_URL = reportEventLineUrl;
     }
 }

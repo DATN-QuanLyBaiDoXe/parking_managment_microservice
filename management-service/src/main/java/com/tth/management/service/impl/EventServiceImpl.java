@@ -3,10 +3,7 @@ package com.tth.management.service.impl;
 import com.tth.management.elasticsearch.EventEsCustomRepository;
 import com.tth.management.elasticsearch.EventEsRepository;
 import com.tth.management.model.*;
-import com.tth.management.model.dto.EventDTO;
-import com.tth.management.model.dto.EventPagingDTO;
-import com.tth.management.model.dto.ReportDTO;
-import com.tth.management.model.dto.ReportDTOResponse;
+import com.tth.management.model.dto.*;
 import com.tth.management.repository.EventCustomizeRepository;
 import com.tth.management.repository.EventRepository;
 import com.tth.management.service.EventService;
@@ -14,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -278,6 +276,28 @@ public class EventServiceImpl implements EventService {
 
         listResult.sort(Comparator.comparing(ReportDTOResponse::getTime));
         return listResult;
+    }
+
+    @Override
+    @PostConstruct
+    public List<ReportEventDTO> reportEventLine() {
+        // Lấy ngày hiện tại
+        Calendar calendar = Calendar.getInstance();
+        System.out.println("Ngày hiện tại: " + calendar.getTime());
+
+        // Đặt lại Calendar về ngày đầu tiên trong tuần
+        calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
+        calendar.add(Calendar.DATE, 1);
+        System.out.println("Ngày đầu tiên trong tuần: " + calendar.getTime());
+        Date startDate = calendar.getTime();
+
+        // Đặt lại Calendar về ngày cuối cùng trong tuần
+        calendar.add(Calendar.DATE, 6);
+        System.out.println("Ngày cuối cùng trong tuần: " + calendar.getTime());
+        Date endDate = calendar.getTime();
+        List<ReportDTO> reportEventDTOList = eventCustomizeRepository.reportEventLine(startDate, endDate);
+        //parse date sang thứ mấy????
+        return null;
     }
 
     @Override

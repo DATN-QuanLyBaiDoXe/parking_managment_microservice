@@ -1,10 +1,7 @@
 package com.tth.management.service;
 
 import com.tth.management.model.Event;
-import com.tth.management.model.dto.EventDTO;
-import com.tth.management.model.dto.EventPagingDTO;
-import com.tth.management.model.dto.ReportDTO;
-import com.tth.management.model.dto.ReportDTOResponse;
+import com.tth.management.model.dto.*;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -42,4 +39,6 @@ public interface EventService {
     List<ReportDTOResponse> reportEventChartByObject(String filterTimeLevel) throws ParseException;
 
     List<ReportDTOResponse> reportEventChartByStatus(String filterTimeLevel) throws ParseException;
+
+    List<ReportEventDTO> reportEventLine();
 }
