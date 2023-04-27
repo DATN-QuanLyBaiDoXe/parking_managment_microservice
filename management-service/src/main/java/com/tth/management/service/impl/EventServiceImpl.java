@@ -280,7 +280,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @PostConstruct
-    public List<ReportEventDTO> reportEventLine() {
+    public List<ReportEventDTO> reportEventLine() throws ParseException {
         // Lấy ngày hiện tại
         Calendar calendar = Calendar.getInstance();
         System.out.println("Ngày hiện tại: " + calendar.getTime());
@@ -295,9 +295,52 @@ public class EventServiceImpl implements EventService {
         calendar.add(Calendar.DATE, 6);
         System.out.println("Ngày cuối cùng trong tuần: " + calendar.getTime());
         Date endDate = calendar.getTime();
-        List<ReportDTO> reportEventDTOList = eventCustomizeRepository.reportEventLine(startDate, endDate);
+        List<ReportDTO> reportDTOList = eventCustomizeRepository.reportEventLine(startDate, endDate);
         //parse date sang thứ mấy????
-        return null;
+        List<ReportEventDTO> reportEventDTOList = transformToReportEvent(reportDTOList);
+        return reportEventDTOList;
+    }
+
+    private List<ReportEventDTO> transformToReportEvent(List<ReportDTO> reportDTOList) throws ParseException {
+        List<ReportEventDTO> reportEventDTOList = new ArrayList<>();
+        for (ReportDTO reportDTO : reportDTOList) {
+            ReportEventDTO reportEventDTO = new ReportEventDTO();
+            reportEventDTO.setTotal(reportDTO.getTotal());
+            reportEventDTO.setCode(reportDTO.getName());
+            reportEventDTO.setTime(parseToDay(reportDTO.getDate()));
+            reportEventDTOList.add(reportEventDTO);
+        }
+        return reportEventDTOList;
+    }
+
+    private String parseToDay(String date) throws ParseException {
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date day = format.parse(date);
+        calendar.setTime(day);
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+        return getDayName(dayOfWeek);
+    }
+
+    private String getDayName(int dayOfWeek) {
+        switch (dayOfWeek) {
+            case Calendar.SUNDAY:
+                return "Chủ nhật";
+            case Calendar.MONDAY:
+                return "Thứ 2";
+            case Calendar.TUESDAY:
+                return "Thứ 3";
+            case Calendar.WEDNESDAY:
+                return "Thứ 4";
+            case Calendar.THURSDAY:
+                return "Thứ 5";
+            case Calendar.FRIDAY:
+                return "Thứ 6";
+            case Calendar.SATURDAY:
+                return "Thứ 7";
+            default:
+                throw new IllegalArgumentException("Invalid day of week: " + dayOfWeek);
+        }
     }
 
     @Override

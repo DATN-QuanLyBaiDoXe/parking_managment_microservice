@@ -40,5 +40,5 @@ public interface EventService {
 
     List<ReportDTOResponse> reportEventChartByStatus(String filterTimeLevel) throws ParseException;
 
-    List<ReportEventDTO> reportEventLine();
+    List<ReportEventDTO> reportEventLine() throws ParseException;
 }
