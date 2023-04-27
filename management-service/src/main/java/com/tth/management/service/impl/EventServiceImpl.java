@@ -279,7 +279,6 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    @PostConstruct
     public List<ReportEventDTO> reportEventLine() throws ParseException {
         // Lấy ngày hiện tại
         Calendar calendar = Calendar.getInstance();
