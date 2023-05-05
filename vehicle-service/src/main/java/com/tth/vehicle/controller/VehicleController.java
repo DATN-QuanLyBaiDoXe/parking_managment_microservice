@@ -6,12 +6,9 @@ import com.tth.common.utils.StringUtil;
 import com.tth.vehicle.model.Owner;
 import com.tth.vehicle.model.Vehicle;
 import com.tth.vehicle.model.dto.AuthorizationResponseDTO;
-import com.tth.vehicle.model.dto.OwnerDTO;
-import com.tth.vehicle.model.dto.OwnerResponse;
 import com.tth.vehicle.model.dto.VehicleDTO;
 import com.tth.vehicle.service.OwnerService;
 import com.tth.vehicle.service.VehicleService;
-import com.tth.vehicle.validation.OwnerValidation;
 import com.tth.vehicle.validation.VehicleValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -37,7 +34,7 @@ public class VehicleController extends BaseController {
         ResponseMessage response = null;
 
         AuthorizationResponseDTO dto = authenToken(headerParam);
-        if(dto == null) {
+        if (dto == null) {
             response = new ResponseMessage(HttpStatus.UNAUTHORIZED.value(), "Bạn chưa đăng nhập",
                     new MessageContent(HttpStatus.UNAUTHORIZED.value(), "Bạn chưa đăng nhập", null));
         } else {
@@ -55,7 +52,7 @@ public class VehicleController extends BaseController {
                 pageable = PageRequest.of(0, 20, Sort.by(sort));
             }
             Page<VehicleDTO> vehicleDTOPage = vehicleService.getAll(pageable, search);
-            if(vehicleDTOPage == null){
+            if (vehicleDTOPage == null) {
                 response = new ResponseMessage(HttpStatus.OK.value(), "Lấy danh sách phương tiện",
                         new MessageContent(HttpStatus.OK.value(), "Lấy danh sách phương tiện", null, 0L));
             } else {
@@ -70,24 +67,26 @@ public class VehicleController extends BaseController {
         ResponseMessage response = null;
 
         AuthorizationResponseDTO dto = authenToken(headerParam);
-        if(dto == null) {
+        if (dto == null) {
             response = new ResponseMessage(HttpStatus.UNAUTHORIZED.value(), "Bạn chưa đăng nhập",
                     new MessageContent(HttpStatus.UNAUTHORIZED.value(), "Bạn chưa đăng nhập", null));
         } else {
             VehicleDTO vehicleDTO = getVehicleDTOFromBodyParam(bodyParam);
             String invalidData = new VehicleValidation().validateVehicle(vehicleDTO);
-            if(invalidData != null) {
+            if (invalidData != null) {
                 response = new ResponseMessage(HttpStatus.BAD_REQUEST.value(), invalidData,
                         new MessageContent(HttpStatus.BAD_REQUEST.value(), invalidData, null));
             } else {
-                Vehicle existVehicle = vehicleService.findByPlace(vehicleDTO.getPlace());
-                if(existVehicle != null){
-                    invalidData = "Đã tồn tại phương tiện với biển số " + vehicleDTO.getPlace();
-                    response = new ResponseMessage(HttpStatus.CONFLICT.value(), invalidData,
-                            new MessageContent(HttpStatus.CONFLICT.value(), invalidData, null));
+                if (!StringUtil.isNullOrEmpty(vehicleDTO.getPlace())) {
+                    Vehicle existVehicle = vehicleService.findByPlace(vehicleDTO.getPlace());
+                    if (existVehicle != null) {
+                        invalidData = "Đã tồn tại phương tiện với biển số " + vehicleDTO.getPlace();
+                        response = new ResponseMessage(HttpStatus.CONFLICT.value(), invalidData,
+                                new MessageContent(HttpStatus.CONFLICT.value(), invalidData, null));
+                    }
                 } else {
                     Owner existOwner = ownerService.findByUuid(vehicleDTO.getOwnerName());
-                    if(existOwner == null){
+                    if (existOwner == null) {
                         invalidData = "Không tìm thấy thông tin người sở hữu trong hệ thống";
                         response = new ResponseMessage(HttpStatus.CONFLICT.value(), invalidData,
                                 new MessageContent(HttpStatus.CONFLICT.value(), invalidData, null));
@@ -105,29 +104,31 @@ public class VehicleController extends BaseController {
         ResponseMessage response = null;
 
         AuthorizationResponseDTO dto = authenToken(headerParam);
-        if(dto == null) {
+        if (dto == null) {
             response = new ResponseMessage(HttpStatus.UNAUTHORIZED.value(), "Bạn chưa đăng nhập",
                     new MessageContent(HttpStatus.UNAUTHORIZED.value(), "Bạn chưa đăng nhập", null));
         } else {
             Vehicle vehicle = vehicleService.findById(requestUrl);
-            if(vehicle == null){
+            if (vehicle == null) {
                 response = new ResponseMessage(HttpStatus.NOT_FOUND.value(), "Không tìm thấy bản ghi",
                         new MessageContent(HttpStatus.NOT_FOUND.value(), "Không tìm thấy bản ghi", null));
             } else {
                 VehicleDTO vehicleDTO = getVehicleDTOFromBodyParam(bodyParam);
                 String invalidData = new VehicleValidation().validateVehicle(vehicleDTO);
-                if(invalidData != null) {
+                if (invalidData != null) {
                     response = new ResponseMessage(HttpStatus.BAD_REQUEST.value(), invalidData,
                             new MessageContent(HttpStatus.BAD_REQUEST.value(), invalidData, null));
                 } else {
-                    Vehicle existVehicle = vehicleService.findByPlace(vehicleDTO.getPlace());
-                    if(existVehicle != null && !existVehicle.getUuid().equals(requestUrl)){
-                        invalidData = "Đã tồn tại phương tiện với biển số " + vehicleDTO.getPlace();
-                        response = new ResponseMessage(HttpStatus.CONFLICT.value(), invalidData,
-                                new MessageContent(HttpStatus.CONFLICT.value(), invalidData, null));
+                    if (!StringUtil.isNullOrEmpty(vehicleDTO.getPlace())) {
+                        Vehicle existVehicle = vehicleService.findByPlace(vehicleDTO.getPlace());
+                        if (existVehicle != null) {
+                            invalidData = "Đã tồn tại phương tiện với biển số " + vehicleDTO.getPlace();
+                            response = new ResponseMessage(HttpStatus.CONFLICT.value(), invalidData,
+                                    new MessageContent(HttpStatus.CONFLICT.value(), invalidData, null));
+                        }
                     } else {
                         Owner existOwner = ownerService.findByUuid(vehicleDTO.getOwnerName());
-                        if(existOwner == null){
+                        if (existOwner == null) {
                             invalidData = "Không tìm thấy thông tin người sở hữu trong hệ thống";
                             response = new ResponseMessage(HttpStatus.CONFLICT.value(), invalidData,
                                     new MessageContent(HttpStatus.CONFLICT.value(), invalidData, null));
@@ -149,7 +150,7 @@ public class VehicleController extends BaseController {
         ResponseMessage response = null;
 
         AuthorizationResponseDTO dto = authenToken(headerParam);
-        if(dto == null) {
+        if (dto == null) {
             response = new ResponseMessage(HttpStatus.UNAUTHORIZED.value(), "Bạn chưa đăng nhập",
                     new MessageContent(HttpStatus.UNAUTHORIZED.value(), "Bạn chưa đăng nhập", null));
         } else {
@@ -188,16 +189,16 @@ public class VehicleController extends BaseController {
         return vehicleDTO;
     }
 
-    public ResponseMessage getVehicleByOwner(String requestUrl, String method, String pathParam, Map<String, String> headerParam){
+    public ResponseMessage getVehicleByOwner(String requestUrl, String method, String pathParam, Map<String, String> headerParam) {
         ResponseMessage response = null;
 
         AuthorizationResponseDTO dto = authenToken(headerParam);
-        if(dto == null) {
+        if (dto == null) {
             response = new ResponseMessage(HttpStatus.UNAUTHORIZED.value(), "Bạn chưa đăng nhập",
                     new MessageContent(HttpStatus.UNAUTHORIZED.value(), "Bạn chưa đăng nhập", null));
         } else {
             List<VehicleDTO> vehicleList = vehicleService.findByOwner(pathParam);
-            if(vehicleList == null){
+            if (vehicleList == null) {
                 response = new ResponseMessage(HttpStatus.OK.value(), "Lấy danh sách phương tiện",
                         new MessageContent(HttpStatus.OK.value(), "Lấy danh sách phương tiện", null));
             } else {

@@ -1,6 +1,7 @@
-D:\HAUI\DATN\common-service\src\main\java\com\tth\common\message\RequestMessage.java
-D:\HAUI\DATN\common-service\src\main\java\com\tth\common\dto\RabbitMQType.java
-D:\HAUI\DATN\common-service\src\main\java\com\tth\common\utils\StringUtil.java
-D:\HAUI\DATN\common-service\src\main\java\com\tth\common\message\MessageContent.java
-D:\HAUI\DATN\common-service\src\main\java\com\tth\common\constant\ResourcePath.java
-D:\HAUI\DATN\common-service\src\main\java\com\tth\common\message\ResponseMessage.java
+D:\HAUI\DATN-BE\common-service\src\main\java\com\tth\common\message\RequestMessage.java
+D:\HAUI\DATN-BE\common-service\src\main\java\com\tth\common\message\ResponseMessage.java
+D:\HAUI\DATN-BE\common-service\src\main\java\com\tth\common\message\MessageContent.java
+D:\HAUI\DATN-BE\common-service\src\main\java\com\tth\common\dto\RabbitMQType.java
+D:\HAUI\DATN-BE\common-service\src\main\java\com\tth\common\utils\DateUtil.java
+D:\HAUI\DATN-BE\common-service\src\main\java\com\tth\common\constant\ResourcePath.java
+D:\HAUI\DATN-BE\common-service\src\main\java\com\tth\common\utils\StringUtil.java
