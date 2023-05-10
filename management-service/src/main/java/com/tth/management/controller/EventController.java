@@ -6,7 +6,9 @@ import com.tth.common.message.ResponseMessage;
 import com.tth.management.kafka.KafkaClient;
 import com.tth.management.model.Event;
 import com.tth.management.model.dto.AuthorizationResponseDTO;
+import com.tth.management.model.dto.EventDTO;
 import com.tth.management.model.dto.EventPagingDTO;
+import com.tth.management.model.dto.EventResponse;
 import com.tth.management.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -124,9 +126,9 @@ public class EventController extends BaseController {
             } else {
                 Event event = eventService.findByUuid(uuid);
                 if (event != null) {
-                    eventService.updateStatus(event, dto.getUuid(), (Integer) bodyParam.get("status"));
-                    response = new ResponseMessage(HttpStatus.OK.value(), "Xóa sự kiện thành công",
-                            new MessageContent(HttpStatus.OK.value(), "Xóa sự kiện thành công", null));
+                    EventResponse eventResponse = eventService.updateStatus(event, dto.getUuid(), (Integer) bodyParam.get("status"));
+                    response = new ResponseMessage(HttpStatus.OK.value(), "Cập nhật sự kiện thành công",
+                            new MessageContent(HttpStatus.OK.value(), "Cập nhật sự kiện thành công", eventResponse));
                 } else {
                     response = new ResponseMessage(HttpStatus.NOT_FOUND.value(), "Sự kiện không tồn tại",
                             new MessageContent(HttpStatus.NOT_FOUND.value(), "Sự kiện không tồn tại", null));

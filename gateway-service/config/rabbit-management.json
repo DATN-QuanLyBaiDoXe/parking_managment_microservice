@@ -43,5 +43,10 @@
     "path": "/management/report/line",
     "method": "GET",
     "rabbit": "rpc"
+  },
+  {
+    "path": "/management/update-status",
+    "method": "PUT",
+    "rabbit": "rpc"
   }
 ]

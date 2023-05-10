@@ -24,7 +24,7 @@ public interface EventService {
 
     Event findById(String id);
 
-    EventDTO updateStatus(Event event, String uuid, Integer status);
+    EventResponse updateStatus(Event event, String uuid, Integer status);
 
     void addMonthEventPartition(String table);
 

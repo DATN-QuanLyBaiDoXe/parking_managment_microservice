@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -19,7 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.tth.management.repository.EventCustomizeRepository.transform;
+import static com.tth.management.repository.EventCustomizeRepository.*;
 import static java.util.stream.Collectors.groupingBy;
 
 @Service
@@ -36,6 +35,24 @@ public class EventServiceImpl implements EventService {
 
     @Autowired
     private EventEsCustomRepository eventEsCustomRepository;
+
+    public static EventResponse transformToEventResponse(Event event) {
+        EventResponse response = new EventResponse();
+        response.setCreatedDate(event.getCreatedDate());
+        response.setDescription(event.getDescription());
+        response.setImage(event.getImage());
+        response.setPlace(event.getPlace());
+        response.setUuid(event.getUuid());
+        response.setEventType(getEventType(event.getEventType()));
+        response.setObjectType(getObjectType(event.getObjectType()));
+        response.setSourceType(getSourceType(event.getSourceType()));
+        response.setStatus(getStatus(event.getStatus()));
+        return response;
+    }
+
+    private static int randomInt(int min, int max) {
+        return min + (int) (Math.random() * ((max - min) + 1));
+    }
 
     @Override
     public EventPagingDTO getAllEvent(Map<String, Object> bodyParam) throws IOException {
@@ -129,7 +146,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public void deleteMultiEvents(List<Event> eventList, String uuid) {
-        for (Event event : eventList){
+        for (Event event : eventList) {
             event.setNewest(false);
             event.setDelete(false);
             event.setModifiedBy(uuid);
@@ -144,17 +161,19 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventDTO updateStatus(Event event, String uuid, Integer status) {
+    public EventResponse updateStatus(Event event, String uuid, Integer status) {
         event.setNewest(false);
         eventRepository.save(event);
         eventEsRepository.save(event);
         Event newEvent = event;
+        newEvent.setUuid(UUID.randomUUID().toString());
         newEvent.setStatus(Status.of(status));
         newEvent.setModifiedBy(uuid);
         newEvent.setModifiedDate(new Date());
+        newEvent.setNewest(true);
         eventEsRepository.save(newEvent);
         eventRepository.save(newEvent);
-        return transformToEventDTO(newEvent);
+        return transformToEventResponse(newEvent);
     }
 
     @Override
@@ -174,7 +193,7 @@ public class EventServiceImpl implements EventService {
         difference.addAll(allObject);
         similar.retainAll(objectInDB);
         difference.removeAll(similar);
-        if(!difference.isEmpty()) {
+        if (!difference.isEmpty()) {
             difference.stream().forEach(d -> {
                 ReportDTO reportDTO = new ReportDTO();
                 reportDTO.setCode(d);
@@ -199,7 +218,7 @@ public class EventServiceImpl implements EventService {
         difference.addAll(allStatus);
         similar.retainAll(statusInDB);
         difference.removeAll(similar);
-        if(!difference.isEmpty()) {
+        if (!difference.isEmpty()) {
             difference.stream().forEach(d -> {
                 ReportDTO reportDTO = new ReportDTO();
                 reportDTO.setCode(d);
@@ -387,7 +406,7 @@ public class EventServiceImpl implements EventService {
     public String convertDateVds(String pattern, String input) {
         String[] split = input.split("/");
         if (split.length > 0) {
-            if(pattern.equalsIgnoreCase("HH24:00")) {
+            if (pattern.equalsIgnoreCase("HH24:00")) {
                 String[] spl = input.split(":");
                 return spl[0] + ":00";
             } else if (pattern.equalsIgnoreCase("dd/MM/yyyy")) {
@@ -403,7 +422,7 @@ public class EventServiceImpl implements EventService {
     private List<String> getKey(String filterTimeLevel) throws ParseException {
         List<String> result = new ArrayList<>();
         Calendar cal = Calendar.getInstance();
-        if(filterTimeLevel.equalsIgnoreCase("day")){
+        if (filterTimeLevel.equalsIgnoreCase("day")) {
             for (int i = 0; i < 24; i++) {
                 DateFormat dateFormat = new SimpleDateFormat("HH:mm");
                 cal.set(Calendar.HOUR_OF_DAY, i);
@@ -430,18 +449,14 @@ public class EventServiceImpl implements EventService {
 
     private String getPatternByTimeLevel(String filterTimeLevel) {
         String pattern = null;
-        if(filterTimeLevel.equalsIgnoreCase("day")) {
+        if (filterTimeLevel.equalsIgnoreCase("day")) {
             pattern = "HH24:00";
-        } else if(filterTimeLevel.equalsIgnoreCase("month")) {
+        } else if (filterTimeLevel.equalsIgnoreCase("month")) {
             pattern = "dd/MM";
-        } else if(filterTimeLevel.equalsIgnoreCase("year")) {
+        } else if (filterTimeLevel.equalsIgnoreCase("year")) {
             pattern = "MM/yyyy";
         }
         return pattern;
-    }
-
-    private static int randomInt(int min, int max) {
-        return min + (int)(Math.random() * ((max - min) + 1));
     }
 
     private EventDTO transformToEventDTO(Event event) {
