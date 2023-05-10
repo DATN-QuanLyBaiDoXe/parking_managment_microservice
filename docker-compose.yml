@@ -1,0 +1,77 @@
+version: '2.4'
+
+services:
+  gateway-service:
+    build: ./gateway-service
+    container_name: gateway-backend
+    image: gateway-backend:latest
+    environment:
+        - TZ=Asia/Ho_Chi_Minh
+    mem_limit: 1024m
+    mem_reservation: 256M
+    ports:
+      - 8681:8681
+      - 8181:8181
+    volumes:
+      - ./gateway-service/config:/config
+      - ./gateway-service/logs:/logs
+
+  id-service:
+    build: ./id-service
+    container_name: id-service
+    image: id-service:latest
+    mem_limit: 1024m
+    mem_reservation: 512M
+    environment:
+        - TZ=Asia/Ho_Chi_Minh
+    ports:
+      - 8282:8282
+    volumes:
+      - ./id-service/config:/config
+      - ./id-service/logs:/logs
+    network_mode: host  
+
+  management-service:
+    build: ./management-service
+    container_name: management-service
+    image: management-service:latest
+    mem_limit: 1024m
+    mem_reservation: 512M
+    environment:
+        - TZ=Asia/Ho_Chi_Minh
+    ports:
+      - 8484:8484
+    volumes:
+      - ./management-service/config:/config
+      - ./management-service/logs:/logs
+    network_mode: host
+
+  report-service:
+    build: ./report-service
+    container_name: report-service
+    image: report-service:latest
+    environment:
+        - TZ=Asia/Ho_Chi_Minh
+    mem_limit: 512m
+    mem_reservation: 256M
+    ports:
+      - 9613:9613
+    volumes:
+      - ./report-service/config:/config
+      - ./report-service/logs:/logs
+    network_mode: host
+
+  vehicle-service:
+    build: ./vehicle-service
+    container_name: vehicle-service
+    image: vehicle-service:latest
+    environment:
+      - TZ=Asia/Ho_Chi_Minh
+    mem_limit: 512m
+    mem_reservation: 256M
+    ports:
+      - 8383:8383
+    volumes:
+      - ./vehicle-service/config:/config
+      - ./vehicle-service/logs:/logs
+    network_mode: host
